@@ -11,7 +11,7 @@ import {
 import { ItemService } from './item.service';
 import { CreateItemDto, ItemCheckDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOperation } from '@nestjs/swagger';
 
 @Controller('item')
 export class ItemController {
@@ -39,6 +39,9 @@ export class ItemController {
   @ApiOperation({
     summary: '실제 데이터 체크',
     description: 'Open API에서 실제 데이터가 있는지 확인합니다.',
+  })
+  @ApiCreatedResponse({
+    description: '아이템이 실제로 있는 경우 입니다.',
   })
   @Post('check')
   async check(@Body() itemCheckDto: ItemCheckDto) {

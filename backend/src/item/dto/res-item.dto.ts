@@ -8,7 +8,7 @@ import {
   Min,
 } from 'class-validator';
 
-export class ItemCheckDto {
+export class auctionsResDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
@@ -18,16 +18,9 @@ export class ItemCheckDto {
   @IsNotEmpty()
   @Min(10000)
   @ApiProperty()
-  category: number;
-
-  @IsBoolean()
-  @Transform(({ value }) =>
-    value === undefined || value === null || value === '' ? false : value,
-  )
-  @ApiProperty({ default: false })
-  autcions: boolean = false;
+  icon: number;
 }
-export class CreateItemDto extends ItemCheckDto {
+export class markets extends auctionsResDto {
   @IsNumber()
   @IsNotEmpty()
   @ApiProperty()

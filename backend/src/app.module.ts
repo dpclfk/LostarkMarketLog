@@ -8,6 +8,7 @@ import { Market } from './entities/Market.entity';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MongoConfig } from './config/mongo.config';
 import { Item, ItemSchema } from './schema/item.schema';
+import { ItemSearchService } from './item-search/item-search.service';
 
 @Module({
   imports: [
@@ -30,6 +31,6 @@ import { Item, ItemSchema } from './schema/item.schema';
     MongooseModule.forFeature([{ name: Item.name, schema: ItemSchema }]),
   ],
   controllers: [],
-  providers: [],
+  providers: [ItemSearchService],
 })
 export class AppModule {}
