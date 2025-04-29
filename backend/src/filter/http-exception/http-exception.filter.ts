@@ -11,14 +11,14 @@ export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const status = exception.getStatus();
     const errMessage = exception.getResponse() as {
       message: string | string[];
       statusCode: number;
       error: string;
     };
-    response.status(status).json({
-      statusCode: status,
+    console.error(errMessage.message);
+    response.status(400).json({
+      statusCode: 400,
       message: errMessage.message,
     });
   }

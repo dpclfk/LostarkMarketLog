@@ -1,10 +1,13 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
   IsBoolean,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
+  IsUrl,
+  Matches,
   Min,
 } from 'class-validator';
 
@@ -17,19 +20,32 @@ export class ItemCheckDto {
   @IsNumber()
   @IsNotEmpty()
   @Min(10000)
-  @ApiProperty()
+  @ApiProperty({ example: 10000 })
   category: number;
 
+  @IsOptional()
   @IsBoolean()
   @Transform(({ value }) =>
     value === undefined || value === null || value === '' ? false : value,
   )
-  @ApiProperty({ default: false })
+  @ApiPropertyOptional({ default: false })
   autcions: boolean = false;
 }
 export class CreateItemDto extends ItemCheckDto {
-  @IsNumber()
+  @IsUrl()
   @IsNotEmpty()
-  @ApiProperty()
-  img: string;
+  @Matches(/^https:\/\/cdn-lostark\.game\.onstove\.com\//)
+  @ApiProperty({
+    example: 'https://cdn-lostark.game.onstove.com/',
+    description: 'example에 있는 문자가 들어가 있어야함',
+  })
+  icon: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) =>
+    value === undefined || value === '' ? null : value,
+  )
+  @ApiPropertyOptional()
+  itemCode?: number;
 }

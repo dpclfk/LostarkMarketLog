@@ -9,6 +9,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { MongoConfig } from './config/mongo.config';
 import { Item, ItemSchema } from './schema/item.schema';
 import { ItemSearchService } from './item-search/item-search.service';
+import { S3UploadService } from './s3-upload/s3-upload.service';
 
 @Module({
   imports: [
@@ -31,6 +32,6 @@ import { ItemSearchService } from './item-search/item-search.service';
     MongooseModule.forFeature([{ name: Item.name, schema: ItemSchema }]),
   ],
   controllers: [],
-  providers: [ItemSearchService],
+  providers: [ItemSearchService, S3UploadService],
 })
 export class AppModule {}

@@ -1,10 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import mongoose from 'mongoose';
-import { HttpExceptionFilter } from './http-exception/http-exception.filter';
-import { MongoErrFilter } from './mongo-err/mongo-err.filter';
+import { HttpExceptionFilter } from './filter/http-exception/http-exception.filter';
+import { MongoErrFilter } from './filter/mongo-err/mongo-err.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { AxiosErrFilter } from './filter/axios-err/axios-err.filter';
+import { AwsErrFilter } from './filter/aws-err/aws-err.filter';
+import { MysqlErrFilter } from './filter/mysql-err/mysql-err.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,8 +22,14 @@ async function bootstrap() {
       },
     }),
   );
-  app.useGlobalFilters(new HttpExceptionFilter());
-  app.useGlobalFilters(new MongoErrFilter());
+  // 에러 필터 관련
+  app.useGlobalFilters(
+    new HttpExceptionFilter(),
+    new AwsErrFilter(),
+    new MongoErrFilter(),
+    new AxiosErrFilter(),
+    new MysqlErrFilter(),
+  );
 
   // swagger 관련
   const options = new DocumentBuilder()

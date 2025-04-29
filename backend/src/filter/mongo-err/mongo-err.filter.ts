@@ -10,6 +10,7 @@ export class MongoErrFilter implements ExceptionFilter {
     console.error(exception.name);
     response.status(400).json({
       statusCode: 400,
+      message: 'mongoDB 오류',
     });
   }
 }

@@ -7,6 +7,10 @@ import { Item, ItemDocument } from 'src/schema/item.schema';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { ItemSearchService } from 'src/item-search/item-search.service';
+import { S3UploadService } from 'src/s3-upload/s3-upload.service';
+import { Repository } from 'typeorm';
+import { Market } from 'src/entities/Market.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 export interface ItemSearchParams {
   name: string;
@@ -18,8 +22,11 @@ export interface ItemSearchParams {
 export class ItemService {
   constructor(
     @InjectModel(Item.name) private itemModel: Model<ItemDocument>,
+    @InjectRepository(Market)
+    private marketRepository: Repository<Market>,
     private configService: ConfigService,
     private itemsearch: ItemSearchService,
+    private s3UploadService: S3UploadService,
   ) {}
 
   async check(itemCheckDto: ItemCheckDto) {
@@ -32,13 +39,34 @@ export class ItemService {
   }
 
   async create(createItemDto: CreateItemDto) {
-    const lostlink = axios.create({
-      baseURL: 'https://developer-lostark.game.onstove.com/',
-      headers: {
-        accept: 'application/json',
-        authorization: `${this.configService.get<string>(`LOSTAPI`)}`,
-      },
-    });
+    const s3upload = await this.s3UploadService.s3Upload(
+      createItemDto.icon,
+      createItemDto.name,
+    );
+    if (createItemDto.itemCode) {
+      // itemCode있을때, 즉 market일때
+      // auctions는 아이템 코드가 없음
+      if (createItemDto.autcions === true) {
+        throw new BadRequestException('잘못된 생성입니다.');
+      }
+      const itemSave = this.marketRepository.create({
+        name: createItemDto.name,
+        itemCode: createItemDto.itemCode,
+        auctions: false,
+        category: createItemDto.category,
+      });
+      await this.marketRepository.save(itemSave);
+    } else {
+      if (createItemDto.autcions === false) {
+        throw new BadRequestException('잘못된 생성입니다.');
+      }
+      const itemSave = this.marketRepository.create({
+        name: createItemDto.name,
+        auctions: true,
+        category: createItemDto.category,
+      });
+      await this.marketRepository.save(itemSave);
+    }
     return 'create ok';
   }
 
