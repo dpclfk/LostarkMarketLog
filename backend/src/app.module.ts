@@ -8,8 +8,8 @@ import { Market } from './entities/Market.entity';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MongoConfig } from './config/mongo.config';
 import { Item, ItemSchema } from './schema/item.schema';
-import { ItemSearchService } from './item-search/item-search.service';
-import { S3UploadService } from './s3-upload/s3-upload.service';
+import { TasksModule } from './tasks/tasks.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -30,8 +30,10 @@ import { S3UploadService } from './s3-upload/s3-upload.service';
       useFactory: MongoConfig,
     }),
     MongooseModule.forFeature([{ name: Item.name, schema: ItemSchema }]),
+    ScheduleModule.forRoot(),
+    TasksModule,
   ],
   controllers: [],
-  providers: [ItemSearchService, S3UploadService],
+  providers: [],
 })
 export class AppModule {}

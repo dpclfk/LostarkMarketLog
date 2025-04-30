@@ -29,7 +29,7 @@ export class ItemCheckDto {
     value === undefined || value === null || value === '' ? false : value,
   )
   @ApiPropertyOptional({ default: false })
-  autcions: boolean = false;
+  auctions: boolean = false;
 }
 export class CreateItemDto extends ItemCheckDto {
   @IsUrl()

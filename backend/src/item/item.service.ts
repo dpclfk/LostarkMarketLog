@@ -11,6 +11,7 @@ import { S3UploadService } from 'src/s3-upload/s3-upload.service';
 import { Repository } from 'typeorm';
 import { Market } from 'src/entities/Market.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { DateTime } from 'luxon';
 
 export interface ItemSearchParams {
   name: string;
@@ -46,7 +47,7 @@ export class ItemService {
     if (createItemDto.itemCode) {
       // itemCode있을때, 즉 market일때
       // auctions는 아이템 코드가 없음
-      if (createItemDto.autcions === true) {
+      if (createItemDto.auctions === true) {
         throw new BadRequestException('잘못된 생성입니다.');
       }
       const itemSave = this.marketRepository.create({
@@ -57,7 +58,7 @@ export class ItemService {
       });
       await this.marketRepository.save(itemSave);
     } else {
-      if (createItemDto.autcions === false) {
+      if (createItemDto.auctions === false) {
         throw new BadRequestException('잘못된 생성입니다.');
       }
       const itemSave = this.marketRepository.create({
@@ -67,11 +68,38 @@ export class ItemService {
       });
       await this.marketRepository.save(itemSave);
     }
+    // 최초 시도시 mongoDB에 1번 저장함
+    const nowCreate = await this.marketRepository.findOne({
+      where: { name: createItemDto.name },
+    });
+    const price = await this.itemsearch.priceSearch(nowCreate);
+    const createdItem = new this.itemModel({
+      name: price.name,
+      price: price.price || 0,
+      comment: `최초 시도시 자동으로 1회 저장됩니다.`,
+    });
+    await createdItem.save();
+
     return 'create ok';
   }
 
-  findAll(QT: string) {
-    return `This action returns all item${QT}`;
+  async findAll() {
+    const findAllItem: Market[] = await this.marketRepository.find();
+    const findAllLastPrice = await Promise.all(
+      findAllItem.map(async (item) => {
+        const mongoFindAll = await this.itemModel
+          .findOne({ name: item.name })
+          .sort({ createdAt: -1 });
+
+        return {
+          name: mongoFindAll.name,
+          price: mongoFindAll.price,
+          comment: mongoFindAll.comment,
+          img: `https://${this.configService.get('AWS_S3_BUCKET')}.s3.${this.configService.get('AWS_REGION')}.amazonaws.com/${mongoFindAll.name}`,
+        };
+      }),
+    );
+    return findAllLastPrice;
   }
 
   findOne(id: number) {
@@ -82,7 +110,8 @@ export class ItemService {
     return `This action updates a #${id} item`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    await this.marketRepository.delete({ id: 1 });
     return `This action removes a #${id} item`;
   }
 }

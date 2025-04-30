@@ -17,14 +17,18 @@ import { ApiCreatedResponse, ApiOperation } from '@nestjs/swagger';
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 
+  @ApiOperation({
+    summary: 'DB의 모든아이템 최신가격',
+    description: 'DB에 저장되어있는 모든아이템의 가장 최신가격입니다.',
+  })
   @Get()
-  findAll(@Query('test') QT: string) {
-    return this.itemService.findAll(QT);
+  async findAll() {
+    return await this.itemService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.itemService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.itemService.findOne(+id);
   }
 
   @ApiOperation({
@@ -33,7 +37,7 @@ export class ItemController {
   })
   @Post()
   async create(@Body() createItemDto: CreateItemDto) {
-    return this.itemService.create(createItemDto);
+    return await this.itemService.create(createItemDto);
   }
 
   @ApiOperation({
@@ -45,7 +49,7 @@ export class ItemController {
   })
   @Post('check')
   async check(@Body() itemCheckDto: ItemCheckDto) {
-    return this.itemService.check(itemCheckDto);
+    return await this.itemService.check(itemCheckDto);
   }
 
   @Patch(':id')

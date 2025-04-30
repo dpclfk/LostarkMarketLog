@@ -1,7 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosInstance } from 'axios';
-import { CreateItemDto, ItemCheckDto } from 'src/item/dto/create-item.dto';
+import { Market } from 'src/entities/Market.entity';
+import { ItemCheckDto } from 'src/item/dto/create-item.dto';
 import { AuctionsItemDto, MarketsDto } from 'src/item/dto/open-api.dto';
 
 @Injectable()
@@ -19,7 +20,7 @@ export class ItemSearchService {
   }
 
   async itemCheck(itemCheckDto: ItemCheckDto) {
-    if (itemCheckDto.autcions) {
+    if (itemCheckDto.auctions) {
       const searchAPI = await this.lostlink.post('auctions/items', {
         ItemLevelMin: 0,
         ItemLevelMax: 0,
@@ -51,7 +52,7 @@ export class ItemSearchService {
         PageNo: 1,
         SortCondition: 'ASC',
       });
-      // 값이 잘못되면 null을 받는데 이경우 map관련 문제가 생겨 if로 따로 뺌
+      // 값이 잘못되면 null을 받는데 이경우 타입에러가 나기때문에 메시지를 명확히 하기위함
       if (searchAPI.data.Items === null) {
         throw new BadRequestException('존재하지 않는 아이템입니다.');
       }
@@ -81,5 +82,59 @@ export class ItemSearchService {
       return itemArr;
     }
   }
-  async itemSearch(createItemDto: CreateItemDto) {}
+  async priceSearch(market: Market) {
+    if (market.auctions) {
+      const searchAPI = await this.lostlink.post('auctions/items', {
+        ItemLevelMin: 0,
+        ItemLevelMax: 0,
+        ItemGradeQuality: 0,
+        ItemUpgradeLevel: null,
+        ItemTradeAllowCount: null,
+        SkillOptions: [
+          {
+            FirstOption: null,
+            SecondOption: null,
+            MinValue: null,
+            MaxValue: null,
+          },
+        ],
+        EtcOptions: [
+          {
+            FirstOption: null,
+            SecondOption: null,
+            MinValue: null,
+            MaxValue: null,
+          },
+        ],
+        Sort: 'BUY_PRICE',
+        CategoryCode: `${market.category}`,
+        CharacterClass: '',
+        ItemTier: null,
+        ItemGrade: '',
+        ItemName: `${market.name}`,
+        PageNo: 1,
+        SortCondition: 'ASC',
+      });
+      if (searchAPI.data.Items === null) {
+        return { name: market.name, price: null };
+      } else {
+        return {
+          name: market.name,
+          price: searchAPI.data.Items[0].AuctionInfo.BuyPrice,
+        };
+      }
+    } else {
+      const searchAPI = await this.lostlink.get(
+        `markets/items/${market.itemCode}`,
+      );
+      if (searchAPI.data === null) {
+        return { name: market.name, price: null };
+      } else {
+        return {
+          name: market.name,
+          price: searchAPI.data[0].Stats[0].AvgPrice,
+        };
+      }
+    }
+  }
 }

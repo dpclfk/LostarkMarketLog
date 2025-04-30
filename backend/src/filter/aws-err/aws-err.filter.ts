@@ -13,6 +13,8 @@ export class AwsErrFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
+    console.error(exception.message);
+
     const status =
       exception.$metadata?.httpStatusCode || HttpStatus.BAD_REQUEST;
 
