@@ -7,11 +7,15 @@ import { ItemSearchService } from 'src/item-search/item-search.service';
 import { S3UploadService } from 'src/s3-upload/s3-upload.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Market } from 'src/entities/Market.entity';
+import { UsersModule } from 'src/users/users.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Market]),
     MongooseModule.forFeature([{ name: Item.name, schema: ItemSchema }]),
+    UsersModule,
+    AuthModule,
   ],
   controllers: [ItemController],
   providers: [ItemService, ItemSearchService, S3UploadService],

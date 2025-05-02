@@ -9,6 +9,8 @@ import { AxiosErrFilter } from './filter/axios-err/axios-err.filter';
 import { AwsErrFilter } from './filter/aws-err/aws-err.filter';
 import { MysqlErrFilter } from './filter/mysql-err/mysql-err.filter';
 import { TypeErrFilter } from './filter/type-err/type-err.filter';
+import passport from 'passport';
+import session from 'express-session';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -41,6 +43,21 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('apiDocs', app, document);
+
+  // app.use(
+  //   session({
+  //     resave: false,
+  //     saveUninitialized: false,
+  //     secret: process.env.COOKIE_SECRET,
+  //     cookie: {
+  //       httpOnly: true,
+  //     },
+  //   }),
+  // );
+
+  // 로그인 관련
+  // app.use(passport.initialize());
+  // app.use(passport.session());
 
   await app.listen(3000);
 }

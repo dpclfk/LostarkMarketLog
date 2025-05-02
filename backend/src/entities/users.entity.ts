@@ -1,3 +1,5 @@
+// export class  {}
+
 import {
   PrimaryGeneratedColumn,
   Column,
@@ -7,22 +9,22 @@ import {
   DeleteDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'market' })
-export class Market {
+@Entity({ name: 'users' })
+export class Users {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ length: 40, unique: true })
-  name: string;
+  email: string;
 
   @Column()
-  auctions: boolean;
+  password: string;
 
   @Column()
-  category: number;
+  nickname: string;
 
-  @Column({ unique: true, nullable: true })
-  itemCode: number;
+  @Column()
+  admin: boolean;
 
   @CreateDateColumn({ select: false })
   createdAt: Date;

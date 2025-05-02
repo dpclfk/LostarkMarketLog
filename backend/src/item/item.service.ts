@@ -40,17 +40,14 @@ export class ItemService {
   }
 
   async create(createItemDto: CreateItemDto) {
-    const s3upload = await this.s3UploadService.s3Upload(
-      createItemDto.icon,
-      createItemDto.name,
-    );
+    await this.s3UploadService.s3Upload(createItemDto.icon, createItemDto.name);
     if (createItemDto.itemCode) {
       // itemCode있을때, 즉 market일때
       // auctions는 아이템 코드가 없음
       if (createItemDto.auctions === true) {
         throw new BadRequestException('잘못된 생성입니다.');
       }
-      const itemSave = this.marketRepository.create({
+      const itemSave: Market = this.marketRepository.create({
         name: createItemDto.name,
         itemCode: createItemDto.itemCode,
         auctions: false,
@@ -61,7 +58,7 @@ export class ItemService {
       if (createItemDto.auctions === false) {
         throw new BadRequestException('잘못된 생성입니다.');
       }
-      const itemSave = this.marketRepository.create({
+      const itemSave: Market = this.marketRepository.create({
         name: createItemDto.name,
         auctions: true,
         category: createItemDto.category,
@@ -69,11 +66,14 @@ export class ItemService {
       await this.marketRepository.save(itemSave);
     }
     // 최초 시도시 mongoDB에 1번 저장함
-    const nowCreate = await this.marketRepository.findOne({
+    const nowCreate: Market = await this.marketRepository.findOne({
       where: { name: createItemDto.name },
     });
-    const price = await this.itemsearch.priceSearch(nowCreate);
-    const createdItem = new this.itemModel({
+    const price: {
+      name: string;
+      price: any;
+    } = await this.itemsearch.priceSearch(nowCreate);
+    const createdItem: ItemDocument = new this.itemModel({
       name: price.name,
       price: price.price || 0,
       comment: `최초 시도시 자동으로 1회 저장됩니다.`,
@@ -84,34 +84,101 @@ export class ItemService {
   }
 
   async findAll() {
+    // DB에있는 모든 값을 가져옴
     const findAllItem: Market[] = await this.marketRepository.find();
-    const findAllLastPrice = await Promise.all(
-      findAllItem.map(async (item) => {
-        const mongoFindAll = await this.itemModel
-          .findOne({ name: item.name })
-          .sort({ createdAt: -1 });
 
+    // 가져온 아이템들의 최신가격을 mongoDB에서 불러옴
+    const findAllLastPrice: {
+      name: string;
+      price: number;
+      comment?: string;
+      img: string;
+    }[] = await Promise.all(
+      findAllItem.map(async (item) => {
+        const mongoFindAll: Item = await this.itemModel
+          .findOne({ name: item.name })
+          .sort({ createdAt: -1 })
+          .lean();
         return {
           name: mongoFindAll.name,
           price: mongoFindAll.price,
           comment: mongoFindAll.comment,
           img: `https://${this.configService.get('AWS_S3_BUCKET')}.s3.${this.configService.get('AWS_REGION')}.amazonaws.com/${mongoFindAll.name}`,
+          date: mongoFindAll.createdAt,
         };
       }),
     );
     return findAllLastPrice;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} item`;
+  async findOne(id: number) {
+    // 문자 들어왔을때 에러 내보내게
+    if (Number.isNaN(id)) {
+      throw new BadRequestException('숫자만 넣어주세요');
+    }
+    const findItem: Market = await this.marketRepository.findOne({
+      where: { id: id },
+    });
+
+    const mongoFindAll: Item[] = await this.itemModel
+      .find({ name: findItem.name })
+      .sort({ createdAt: -1 });
+
+    const findItemPrice: {
+      name: string;
+      price: number;
+      comment: string;
+      date: Date;
+    }[] = mongoFindAll.map((item) => {
+      return {
+        name: item.name,
+        price: item.price,
+        comment: item.comment,
+        date: item.createdAt,
+      };
+    });
+
+    return {
+      item: findItemPrice,
+      img: `https://${this.configService.get('AWS_S3_BUCKET')}.s3.${this.configService.get('AWS_REGION')}.amazonaws.com/${findItem.name}`,
+    };
   }
 
-  update(id: number, updateItemDto: UpdateItemDto) {
-    return `This action updates a #${id} item`;
+  async update(id: number, updateItemDto: UpdateItemDto) {
+    // 문자 들어왔을때 에러 내보내게
+    if (Number.isNaN(id)) {
+      throw new BadRequestException('숫자만 넣어주세요');
+    }
+
+    // 업데이트니까 id 없어도 db에는 변화 없음
+    await this.marketRepository.update(id, updateItemDto);
+
+    // 만약 id가 없다면 변화가 없었으니 없다고 출력
+    // 이미지만 변환할 가능성이 있어서 이렇게함(이미지는 DB에 저장을 안하고 name값으로만 저장함)
+    const findItem: Market = await this.marketRepository.findOne({
+      where: { id: id },
+    });
+    if (!findItem) {
+      throw new BadRequestException('해당 id는 없는 id 입니다.');
+    }
+    // 이미지에 변화있으면 새로운 이미지로 변경
+    if (updateItemDto.icon) {
+      await this.s3UploadService.s3Upload(updateItemDto.icon, findItem.name);
+    }
+
+    return '변경이 완료되었습니다.';
   }
 
   async remove(id: number) {
-    await this.marketRepository.delete({ id: 1 });
-    return `This action removes a #${id} item`;
+    // 문자 들어왔을때 에러 내보내게
+    if (Number.isNaN(id)) {
+      throw new BadRequestException('숫자만 넣어주세요');
+    }
+    const findItem: Market = await this.marketRepository.findOne({
+      where: { id: id },
+    });
+
+    await this.marketRepository.delete({ id: id });
+    return `${findItem.name} 아이템을 삭제하였습니다.`;
   }
 }

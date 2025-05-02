@@ -3,13 +3,16 @@ import { ItemModule } from './item/item.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { typeormConfig } from './config/typeORM.config';
-import { User } from './entities/User.entity';
+import { Users } from './entities/users.entity';
 import { Market } from './entities/Market.entity';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MongoConfig } from './config/mongo.config';
 import { Item, ItemSchema } from './schema/item.schema';
 import { TasksModule } from './tasks/tasks.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { AuthModule } from './auth/auth.module';
+import { UsersService } from './users/users.service';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -23,7 +26,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       inject: [ConfigService],
       useFactory: typeormConfig,
     }),
-    TypeOrmModule.forFeature([User, Market]),
+    TypeOrmModule.forFeature([Users, Market]),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -32,6 +35,8 @@ import { ScheduleModule } from '@nestjs/schedule';
     MongooseModule.forFeature([{ name: Item.name, schema: ItemSchema }]),
     ScheduleModule.forRoot(),
     TasksModule,
+    AuthModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],

@@ -37,7 +37,7 @@ export class CreateItemDto extends ItemCheckDto {
   @Matches(/^https:\/\/cdn-lostark\.game\.onstove\.com\//)
   @ApiProperty({
     example: 'https://cdn-lostark.game.onstove.com/',
-    description: 'example에 있는 문자가 들어가 있어야함',
+    description: 'example에 있는 문자가 맨앞에 들어가 있어야함',
   })
   icon: string;
 

@@ -12,7 +12,10 @@ export class Item {
   price: number;
 
   @Prop({ required: false })
-  comment: string;
+  comment?: string;
+
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const ItemSchema = SchemaFactory.createForClass(Item);
