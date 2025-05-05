@@ -12,7 +12,7 @@ export function typeormConfig(configService: ConfigService) {
     synchronize: configService.get<boolean>(`SYNCHRONIZE`),
     autoLoadEntities: true,
     namingStrategy: new SnakeNamingStrategy(),
-    // logging: true,
+    logging: false,
   };
   return option;
 }

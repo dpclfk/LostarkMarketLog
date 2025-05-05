@@ -12,7 +12,7 @@ export class MysqlErrFilter implements ExceptionFilter {
     const message = { message: 'mySQL Query 오류입니다.' };
 
     if (exception.message.includes('Duplicate entry')) {
-      message.message = '중복된 아이템 입니다.';
+      message.message = '중복된 값 입니다.';
     }
     response.status(400).json({
       statusCode: 400,

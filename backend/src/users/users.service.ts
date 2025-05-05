@@ -1,24 +1,46 @@
-import { Injectable } from '@nestjs/common';
-
-// 이 부분은 실제 사용자 엔티티를 나타내는 클래스나 인터페이스여야 합니다
-export type User = any;
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { AdminDto } from 'src/auth/dto/admin-dto';
+import { RegisterDto } from 'src/auth/dto/register-dto';
+import { Users } from 'src/entities/users.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
-  private readonly users = [
-    {
-      userId: 1,
-      username: 'john',
-      password: 'changeme',
-    },
-    {
-      userId: 2,
-      username: 'maria',
-      password: 'guess',
-    },
-  ];
+  constructor(
+    @InjectRepository(Users)
+    private usersRepository: Repository<Users>,
+  ) {}
 
-  async findOne(username: string): Promise<User | undefined> {
-    return this.users.find((user) => user.username === username);
+  async login(email: string): Promise<Users | undefined> {
+    return await this.usersRepository.findOne({
+      where: { email: email },
+      select: ['id', 'email', 'password'],
+    });
+  }
+  async register(registerDto: RegisterDto) {
+    const userRegister: Users = this.usersRepository.create({
+      email: registerDto.email,
+      password: registerDto.password,
+      nickname: registerDto.nickname,
+    });
+    await this.usersRepository.save(userRegister);
+  }
+
+  async adminAuth(adminDto: AdminDto) {
+    const adminAuth = await this.usersRepository.findOne({
+      where: { nickname: adminDto.nickname },
+    });
+    this.usersRepository.update(adminAuth.id, { admin: true });
+  }
+
+  async adminRemove(adminDto: AdminDto) {
+    const adminAuth = await this.usersRepository.findOne({
+      where: { nickname: adminDto.nickname },
+    });
+    if (adminAuth.id === 1) {
+      throw new BadRequestException();
+    }
+    this.usersRepository.update(adminAuth.id, { admin: false });
   }
 }

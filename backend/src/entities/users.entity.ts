@@ -1,5 +1,3 @@
-// export class  {}
-
 import {
   PrimaryGeneratedColumn,
   Column,
@@ -14,16 +12,16 @@ export class Users {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 40, unique: true })
+  @Column({ length: 40, unique: true, nullable: false })
   email: string;
 
-  @Column()
+  @Column({ select: false, length: 60, nullable: false })
   password: string;
 
-  @Column()
+  @Column({ length: 20, unique: true, nullable: false })
   nickname: string;
 
-  @Column()
+  @Column({ default: false })
   admin: boolean;
 
   @CreateDateColumn({ select: false })

@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import mongoose from 'mongoose';
 import { HttpExceptionFilter } from './filter/http-exception/http-exception.filter';
 import { MongoErrFilter } from './filter/mongo-err/mongo-err.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -9,8 +8,6 @@ import { AxiosErrFilter } from './filter/axios-err/axios-err.filter';
 import { AwsErrFilter } from './filter/aws-err/aws-err.filter';
 import { MysqlErrFilter } from './filter/mysql-err/mysql-err.filter';
 import { TypeErrFilter } from './filter/type-err/type-err.filter';
-import passport from 'passport';
-import session from 'express-session';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -43,21 +40,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('apiDocs', app, document);
-
-  // app.use(
-  //   session({
-  //     resave: false,
-  //     saveUninitialized: false,
-  //     secret: process.env.COOKIE_SECRET,
-  //     cookie: {
-  //       httpOnly: true,
-  //     },
-  //   }),
-  // );
-
-  // 로그인 관련
-  // app.use(passport.initialize());
-  // app.use(passport.session());
 
   await app.listen(3000);
 }

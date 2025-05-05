@@ -7,22 +7,17 @@ import {
   Param,
   Delete,
   UseGuards,
-  Request,
 } from '@nestjs/common';
 import { ItemService } from './item.service';
 import { CreateItemDto, ItemCheckDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { ApiCreatedResponse, ApiOperation } from '@nestjs/swagger';
-import { LocalAuthGuard } from 'src/auth/local-auth.guard';
-import { AuthService } from '../auth/auth.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { AdminGuard } from 'src/auth/admin.guard';
 
 @Controller('item')
 export class ItemController {
-  constructor(
-    private readonly itemService: ItemService,
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly itemService: ItemService) {}
 
   @ApiOperation({
     summary: 'DB의 모든아이템 최신가격',
@@ -46,7 +41,7 @@ export class ItemController {
     summary: 'DB에 저장',
     description: 'POST /check에서 응답된 내용을 기반으로 저장합니다.',
   })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @Post()
   async create(@Body() createItemDto: CreateItemDto) {
     return await this.itemService.create(createItemDto);
@@ -59,7 +54,7 @@ export class ItemController {
   @ApiCreatedResponse({
     description: '아이템이 실제로 있는 경우 입니다.',
   })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @Post('check')
   async check(@Body() itemCheckDto: ItemCheckDto) {
     return await this.itemService.check(itemCheckDto);
@@ -68,7 +63,7 @@ export class ItemController {
     summary: 'MySQL 수정하기',
     description: 'MySQL에서 잘못된값을 수정합니다.',
   })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateItemDto: UpdateItemDto) {
     return await this.itemService.update(+id, updateItemDto);
@@ -79,11 +74,9 @@ export class ItemController {
     description:
       'MySQL에서 완전삭제합니다. 더이상 최신가격 업데이트 및 값이 나오는것을 원하지 않을경우 삭제해주세요. MongoDB값은 삭제하지 않습니다.',
   })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return await this.itemService.remove(+id);
   }
-
-  // 테스트용
 }

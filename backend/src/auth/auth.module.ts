@@ -10,16 +10,15 @@ import { AuthController } from './auth.controller';
 
 @Module({
   imports: [
-    ConfigModule,
     UsersModule,
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get('JWT_SECRET'),
+        secret: configService.get<string>('JWT_SECRET'),
         signOptions: {
-          expiresIn: `${configService.get('JWT_EXPIRATION_TIME')}s`,
+          expiresIn: `${configService.get<string>('JWT_EXPIRATION_TIME')}s`,
         },
       }),
     }),
