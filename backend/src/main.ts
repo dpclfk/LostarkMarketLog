@@ -8,6 +8,7 @@ import { AxiosErrFilter } from './filter/axios-err/axios-err.filter';
 import { AwsErrFilter } from './filter/aws-err/aws-err.filter';
 import { MysqlErrFilter } from './filter/mysql-err/mysql-err.filter';
 import { TypeErrFilter } from './filter/type-err/type-err.filter';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -32,6 +33,8 @@ async function bootstrap() {
     new TypeErrFilter(),
   );
 
+  // 리프레시토큰을 쿠키에 저장하기위해 사용
+  app.use(cookieParser(process.env.COOKIE_SECRET));
   // swagger 관련
   const options = new DocumentBuilder()
     .setTitle('lostark calc API')

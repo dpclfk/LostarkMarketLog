@@ -15,7 +15,7 @@ export class UsersService {
   async login(email: string): Promise<Users | undefined> {
     return await this.usersRepository.findOne({
       where: { email: email },
-      select: ['id', 'email', 'password'],
+      select: ['id', 'password', 'admin', 'nickname'],
     });
   }
   async register(registerDto: RegisterDto) {
@@ -42,5 +42,20 @@ export class UsersService {
       throw new BadRequestException();
     }
     this.usersRepository.update(adminAuth.id, { admin: false });
+  }
+
+  async addRefresh(id: number, refresh_token: string) {
+    await this.usersRepository.update(id, { refresh: refresh_token });
+  }
+
+  async checkRefresh(id: number) {
+    return await this.usersRepository.findOne({
+      where: { id: id },
+      select: ['refresh'],
+    });
+  }
+
+  async logout(id: number) {
+    await this.usersRepository.update(id, { refresh: null });
   }
 }

@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { RegisterDto } from './dto/register-dto';
 import { AdminDto } from './dto/admin-dto';
+import { Users } from 'src/entities/users.entity';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +16,7 @@ export class AuthService {
   ) {}
 
   private async hassPassword(password: string): Promise<string> {
-    const salt = await bcrypt.genSalt(
+    const salt: string = await bcrypt.genSalt(
       parseInt(this.configService.get<string>('SALT_ROUNDS')),
     );
     return await bcrypt.hash(password, salt);
@@ -26,8 +27,8 @@ export class AuthService {
   }
 
   // 첫 로그인할때만 비밀번호 확인함
-  async validateUser(username: string, password: string): Promise<any> {
-    const user = await this.usersService.login(username);
+  async validateUser(email: string, password: string): Promise<any> {
+    const user: Users = await this.usersService.login(email);
     if (await this.matchPassword(password, user.password)) {
       const { password, ...result } = user;
       return result;
@@ -37,12 +38,23 @@ export class AuthService {
 
   async login(user: any) {
     const payload = {
-      username: user.username,
-      sub: user.userId,
-      isAdmin: user.isAdmin,
+      nickname: user.nickname,
+      sub: user.id,
+      isAdmin: user.admin,
     };
+
+    const refresh_token: string = this.jwtService.sign(payload, {
+      secret: this.configService.get('JWT_REFRESH_SECRET'),
+      expiresIn: this.configService.get('JWT_REFRESH_EXPIRATION_TIME'),
+    });
+
+    // 암호화하여 리프레스 토큰 저장
+    const hashed_refresh_token: string = await this.hassPassword(refresh_token);
+    await this.usersService.addRefresh(+user.id, hashed_refresh_token);
+
     return {
       access_token: this.jwtService.sign(payload),
+      refresh_token: refresh_token,
     };
   }
 
@@ -58,5 +70,34 @@ export class AuthService {
 
   async adminRemove(adminDto: AdminDto) {
     await this.usersService.adminRemove(adminDto);
+  }
+
+  async refresh(refresh_token: string) {
+    const payload = await this.jwtService.verify(refresh_token, {
+      secret: this.configService.get('JWT_REFRESH_SECRET'),
+    });
+
+    const refresh: Users = await this.usersService.checkRefresh(payload.sub);
+
+    // 로그인 안되어있으니 401 에러로
+    if (!(await this.matchPassword(refresh_token, refresh.refresh))) {
+      throw new UnauthorizedException();
+    }
+
+    // 액세스 토큰 재발급
+    const new_access_token = this.jwtService.sign({
+      nickname: payload.nickname,
+      sub: payload.id,
+      isAdmin: payload.isAdmin,
+    });
+
+    return new_access_token;
+  }
+  async logout(refresh_token: string) {
+    const payload = await this.jwtService.verify(refresh_token, {
+      secret: this.configService.get('JWT_REFRESH_SECRET'),
+    });
+
+    await this.usersService.logout(payload.sub);
   }
 }

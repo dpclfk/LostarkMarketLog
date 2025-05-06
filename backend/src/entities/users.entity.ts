@@ -24,6 +24,9 @@ export class Users {
   @Column({ default: false })
   admin: boolean;
 
+  @Column({ length: 256, select: false, nullable: true })
+  refresh: string;
+
   @CreateDateColumn({ select: false })
   createdAt: Date;
 
