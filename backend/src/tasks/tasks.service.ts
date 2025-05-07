@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Cron, Interval } from '@nestjs/schedule';
+import { Cron } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Model } from 'mongoose';
 import { Market } from 'src/entities/Market.entity';

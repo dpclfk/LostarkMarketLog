@@ -9,6 +9,7 @@ import { AwsErrFilter } from './filter/aws-err/aws-err.filter';
 import { MysqlErrFilter } from './filter/mysql-err/mysql-err.filter';
 import { TypeErrFilter } from './filter/type-err/type-err.filter';
 import cookieParser from 'cookie-parser';
+import { JwtErrFilter } from './filter/jwt-err/jwt-err.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -31,6 +32,7 @@ async function bootstrap() {
     new AxiosErrFilter(),
     new MysqlErrFilter(),
     new TypeErrFilter(),
+    new JwtErrFilter(),
   );
 
   // 리프레시토큰을 쿠키에 저장하기위해 사용

@@ -39,7 +39,9 @@ export class UsersService {
       where: { nickname: adminDto.nickname },
     });
     if (adminAuth.id === 1) {
-      throw new BadRequestException();
+      throw new BadRequestException(
+        '해당유저는 어드민권한 삭제가 불가능합니다.',
+      );
     }
     this.usersRepository.update(adminAuth.id, { admin: false });
   }

@@ -29,11 +29,14 @@ export class AuthService {
   // 첫 로그인할때만 비밀번호 확인함
   async validateUser(email: string, password: string): Promise<any> {
     const user: Users = await this.usersService.login(email);
-    if (await this.matchPassword(password, user.password)) {
+    if (!user) {
+      return null;
+    } else if (await this.matchPassword(password, user.password)) {
       const { password, ...result } = user;
       return result;
+    } else {
+      return null;
     }
-    return null;
   }
 
   async login(user: any) {
@@ -48,7 +51,7 @@ export class AuthService {
       expiresIn: this.configService.get('JWT_REFRESH_EXPIRATION_TIME'),
     });
 
-    // 암호화하여 리프레스 토큰 저장
+    // 암호화하여 리프레시 토큰 저장
     const hashed_refresh_token: string = await this.hassPassword(refresh_token);
     await this.usersService.addRefresh(+user.id, hashed_refresh_token);
 
@@ -81,7 +84,7 @@ export class AuthService {
 
     // 로그인 안되어있으니 401 에러로
     if (!(await this.matchPassword(refresh_token, refresh.refresh))) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('다시 로그인 해주세요');
     }
 
     // 액세스 토큰 재발급

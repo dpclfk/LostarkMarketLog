@@ -31,7 +31,10 @@ export class ItemService {
   ) {}
 
   async check(itemCheckDto: ItemCheckDto) {
-    const itemcheck = await this.itemsearch.itemCheck(itemCheckDto);
+    const itemcheck: {
+      name: string;
+      icon: string;
+    }[] = await this.itemsearch.itemCheck(itemCheckDto);
     if (itemcheck.length < 1) {
       throw new BadRequestException('존재하지 않는 아이템입니다.');
     } else {
@@ -47,6 +50,13 @@ export class ItemService {
       if (createItemDto.auctions === true) {
         throw new BadRequestException('잘못된 생성입니다.');
       }
+
+      const itemValidation: string = await this.itemsearch.itemCodeSearch(
+        createItemDto.itemCode,
+      );
+      if (itemValidation !== createItemDto.name) {
+        throw new BadRequestException('아이템 이름이 다릅니다.');
+      }
       const itemSave: Market = this.marketRepository.create({
         name: createItemDto.name,
         itemCode: createItemDto.itemCode,
@@ -57,6 +67,11 @@ export class ItemService {
     } else {
       if (createItemDto.auctions === false) {
         throw new BadRequestException('잘못된 생성입니다.');
+      }
+      const itemValidation: { name: string; icon: string }[] =
+        await this.itemsearch.itemCheck(createItemDto);
+      if (itemValidation[0].name !== createItemDto.name) {
+        throw new BadRequestException('아이템 이름이 다릅니다.');
       }
       const itemSave: Market = this.marketRepository.create({
         name: createItemDto.name,

@@ -117,10 +117,21 @@ export class ItemSearchService {
       });
       if (searchAPI.data.Items === null) {
         return { name: market.name, price: null };
-      } else {
+      } else if (
+        searchAPI.data.Items[1] === undefined ||
+        searchAPI.data.Items[0].AuctionInfo.BuyPrice >
+          searchAPI.data.Items[1].AuctionInfo.BuyPrice * 0.9
+      ) {
+        // 첫번째값 내보내기
         return {
           name: market.name,
           price: searchAPI.data.Items[0].AuctionInfo.BuyPrice,
+        };
+      } else {
+        // 두번째값 내보내기
+        return {
+          name: market.name,
+          price: searchAPI.data.Items[1].AuctionInfo.BuyPrice,
         };
       }
     } else {
@@ -130,11 +141,16 @@ export class ItemSearchService {
       if (searchAPI.data === null) {
         return { name: market.name, price: null };
       } else {
+        //  그 당일날의 평균값을 가져옴
         return {
           name: market.name,
           price: searchAPI.data[0].Stats[0].AvgPrice,
         };
       }
     }
+  }
+  async itemCodeSearch(id: number) {
+    const itemSearch = await this.lostlink.get(`markets/items/${id}`);
+    return itemSearch.data[0].Name;
   }
 }

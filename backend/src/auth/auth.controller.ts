@@ -7,6 +7,7 @@ import {
   Post,
   Request,
   Res,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -108,10 +109,18 @@ export class AuthController {
       '쿠키에 저장되어있는 리프레시토큰 삭제, 쿠키값 사용하니 with credentials 설정 필요',
   })
   @Delete('/logout')
-  async logout(@Request() req) {
+  async logout(@Request() req, @Res({ passthrough: true }) res: Response) {
     const refresh_token: string = req.cookies['refresh_token']; // 쿠키에서 리프레시 토큰 가져오기
+    if (!refresh_token) {
+      throw new UnauthorizedException('이미 로그아웃되었습니다.');
+    }
     await this.authService.logout(refresh_token);
-
+    res.clearCookie('refresh_token', {
+      httpOnly: false, // thunder로 테스트중일때만 false로 해놓기
+      secure: false, // thunder로 테스트중일때만 false로 해놓기
+      sameSite: 'none',
+      path: '/auth',
+    });
     return '로그아웃 완료';
   }
 }
