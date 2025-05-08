@@ -12,6 +12,7 @@ import { Repository } from 'typeorm';
 import { Market } from 'src/entities/Market.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DateTime } from 'luxon';
+import { getAllItemsDto, resItemDto } from './dto/res-item.dto';
 
 export interface ItemSearchParams {
   name: string;
@@ -103,22 +104,18 @@ export class ItemService {
     const findAllItem: Market[] = await this.marketRepository.find();
 
     // 가져온 아이템들의 최신가격을 mongoDB에서 불러옴
-    const findAllLastPrice: {
-      name: string;
-      price: number;
-      comment?: string;
-      img: string;
-    }[] = await Promise.all(
+    const findAllLastPrice: getAllItemsDto[] = await Promise.all(
       findAllItem.map(async (item) => {
         const mongoFindAll: Item = await this.itemModel
           .findOne({ name: item.name })
           .sort({ createdAt: -1 })
           .lean();
         return {
+          id: item.id,
           name: mongoFindAll.name,
           price: mongoFindAll.price,
           comment: mongoFindAll.comment,
-          img: `https://${this.configService.get('AWS_S3_BUCKET')}.s3.${this.configService.get('AWS_REGION')}.amazonaws.com/${mongoFindAll.name}`,
+          icon: `https://${this.configService.get('AWS_S3_BUCKET')}.s3.${this.configService.get('AWS_REGION')}.amazonaws.com/${mongoFindAll.name}`,
           date: mongoFindAll.createdAt,
         };
       }),
@@ -139,12 +136,7 @@ export class ItemService {
       .find({ name: findItem.name })
       .sort({ createdAt: -1 });
 
-    const findItemPrice: {
-      name: string;
-      price: number;
-      comment: string;
-      date: Date;
-    }[] = mongoFindAll.map((item) => {
+    const findItemPrice: resItemDto[] = mongoFindAll.map((item) => {
       return {
         name: item.name,
         price: item.price,
@@ -155,7 +147,7 @@ export class ItemService {
 
     return {
       item: findItemPrice,
-      img: `https://${this.configService.get('AWS_S3_BUCKET')}.s3.${this.configService.get('AWS_REGION')}.amazonaws.com/${findItem.name}`,
+      icon: `https://${this.configService.get('AWS_S3_BUCKET')}.s3.${this.configService.get('AWS_REGION')}.amazonaws.com/${findItem.name}`,
     };
   }
 

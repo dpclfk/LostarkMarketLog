@@ -11,9 +11,10 @@ import {
 import { ItemService } from './item.service';
 import { CreateItemDto, ItemCheckDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
-import { ApiCreatedResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AdminGuard } from 'src/auth/admin.guard';
+import { getAllItemsDto, getItemDto } from './dto/res-item.dto';
 
 @Controller('item')
 export class ItemController {
@@ -23,6 +24,10 @@ export class ItemController {
     summary: 'DB의 모든아이템 최신가격',
     description: 'DB에 저장되어있는 모든아이템의 가장 최신가격입니다.',
   })
+  @ApiResponse({
+    status: 200,
+    type: [getAllItemsDto],
+  })
   @Get()
   async findAll() {
     return await this.itemService.findAll();
@@ -31,6 +36,10 @@ export class ItemController {
   @ApiOperation({
     summary: '특정아이템의 기록된 모든 가격들',
     description: 'DB에 저장되어있는 특정아이템의 기록된 모든가격입니다.',
+  })
+  @ApiResponse({
+    status: 200,
+    type: [getItemDto],
   })
   @Get(':id')
   async findOne(@Param('id') id: string) {
