@@ -1,8 +1,10 @@
 import type { JSX } from "react";
 import { useGetAllItems } from "../lib/get-all-items";
+import { useNavigate } from "react-router-dom";
 
 const FindAllItems = (): JSX.Element => {
   const { data, isLoading, isError } = useGetAllItems();
+  const navigate = useNavigate();
 
   // 로딩 중일 때 처리
   if (isLoading) return <p>데이터를 가져오는 중입니다.</p>;
@@ -16,7 +18,12 @@ const FindAllItems = (): JSX.Element => {
   return (
     <>
       {data!.map((item, index) => (
-        <div key={index}>
+        <div
+          key={index}
+          onClick={() => {
+            navigate(`items/${item.id}`);
+          }}
+        >
           <p>Name: {item.name}</p>
           <p>Price: {item.price}</p>
         </div>

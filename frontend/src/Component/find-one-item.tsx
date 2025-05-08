@@ -18,7 +18,19 @@ const FindOneItem = (): JSX.Element => {
 
   return (
     <>
-      <img src={data.icon} />
+      <div className="flex justify-center items-center gap-[0.5rem]">
+        <img src={data.icon} alt="icon" />
+        <p className="text text-lg font-semibold">{data.name}</p>
+      </div>
+      <div>
+        {data.item.map((item, index) => (
+          <div key={index} className="flex justify-center">
+            {new Date(item.date).toLocaleString("ko-KR")}
+            일때 가격은
+            {item.price}골드
+          </div>
+        ))}
+      </div>
     </>
   );
 };

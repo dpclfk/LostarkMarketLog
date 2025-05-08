@@ -30,9 +30,6 @@ import {
 
 export class resItemDto {
   @ApiProperty()
-  name: string;
-
-  @ApiProperty()
   price: number;
 
   @ApiPropertyOptional()
@@ -45,6 +42,9 @@ export class resItemDto {
 
 export class getAllItemsDto extends resItemDto {
   @ApiProperty()
+  name: string;
+
+  @ApiProperty()
   icon: string;
 
   @ApiProperty()
@@ -54,6 +54,9 @@ export class getAllItemsDto extends resItemDto {
 export class getItemDto {
   @ApiProperty({ type: [resItemDto] })
   item: resItemDto[];
+
+  @ApiProperty()
+  name: string;
 
   @ApiProperty()
   icon: string;

@@ -4,8 +4,6 @@ import serverbase from "./server";
 export interface getItem {
   item: [
     {
-      name: string;
-
       price: number;
 
       comment?: string;
@@ -13,6 +11,8 @@ export interface getItem {
       date: Date;
     }
   ];
+  name: string;
+
   icon: string;
 }
 

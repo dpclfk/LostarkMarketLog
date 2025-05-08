@@ -7,6 +7,7 @@ export interface getAllItems {
   comment?: string;
   date: Date;
   icon: string;
+  id: number;
 }
 
 export const useGetAllItems = () => {

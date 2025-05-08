@@ -138,14 +138,16 @@ export class ItemService {
 
     const findItemPrice: resItemDto[] = mongoFindAll.map((item) => {
       return {
-        name: item.name,
         price: item.price,
         comment: item.comment,
         date: item.createdAt,
       };
     });
 
+    console.log(findItemPrice);
+
     return {
+      name: findItem.name,
       item: findItemPrice,
       icon: `https://${this.configService.get('AWS_S3_BUCKET')}.s3.${this.configService.get('AWS_REGION')}.amazonaws.com/${findItem.name}`,
     };
