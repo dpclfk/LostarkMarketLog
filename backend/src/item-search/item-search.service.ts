@@ -56,10 +56,11 @@ export class ItemSearchService {
       if (searchAPI.data.Items === null) {
         throw new BadRequestException('존재하지 않는 아이템입니다.');
       }
-      const itemArr: { name: string; icon: string }[] =
+      const itemArr: { name: string; icon: string; grade: string }[] =
         searchAPI.data.Items.map((item: AuctionsItemDto) => ({
           name: item.Name,
           icon: item.Icon,
+          grade: item.Grade,
         }));
       return itemArr;
     } else {
@@ -73,12 +74,17 @@ export class ItemSearchService {
         PageNo: 1,
         SortCondition: 'ASC',
       });
-      const itemArr: { name: string; icon: string; itemCode: number }[] =
-        searchAPI.data.Items.map((item: MarketsDto) => ({
-          name: item.Name,
-          icon: item.Icon,
-          itemCode: item.Id,
-        }));
+      const itemArr: {
+        name: string;
+        icon: string;
+        itemCode: number;
+        grade: string;
+      }[] = searchAPI.data.Items.map((item: MarketsDto) => ({
+        name: item.Name,
+        icon: item.Icon,
+        itemCode: item.Id,
+        grade: item.Grade,
+      }));
       return itemArr;
     }
   }
@@ -148,9 +154,5 @@ export class ItemSearchService {
         };
       }
     }
-  }
-  async itemCodeSearch(id: number) {
-    const itemSearch = await this.lostlink.get(`markets/items/${id}`);
-    return itemSearch.data[0].Name;
   }
 }

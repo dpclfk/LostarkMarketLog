@@ -48,4 +48,9 @@ export class CreateItemDto extends ItemCheckDto {
   )
   @ApiPropertyOptional()
   itemCode?: number;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  grade: string;
 }

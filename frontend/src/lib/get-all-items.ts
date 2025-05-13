@@ -8,6 +8,7 @@ export interface getAllItems {
   date: Date;
   icon: string;
   id: number;
+  grade: string;
 }
 
 export const useGetAllItems = () => {
@@ -17,6 +18,6 @@ export const useGetAllItems = () => {
       const response = await serverbase.get(`item`);
       return response.data;
     },
-    staleTime: 10 * 1000, // 10초 동안 캐시 유지
+    staleTime: 10 * 60 * 1000, // 5분 동안 캐시 유지
   });
 };

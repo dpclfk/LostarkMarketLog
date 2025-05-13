@@ -24,6 +24,9 @@ export class Market {
   @Column({ unique: true, nullable: true })
   itemCode: number;
 
+  @Column({ length: 10, nullable: false })
+  grade: string;
+
   @CreateDateColumn({ select: false })
   createdAt: Date;
 

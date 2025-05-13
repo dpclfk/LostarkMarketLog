@@ -90,7 +90,7 @@ export class AuthService {
     // 액세스 토큰 재발급
     const new_access_token = this.jwtService.sign({
       nickname: payload.nickname,
-      sub: payload.id,
+      sub: payload.sub,
       isAdmin: payload.isAdmin,
     });
 

@@ -1,6 +1,11 @@
 import type { JSX } from "react";
 import { useGetAllItems } from "../lib/get-all-items";
 import { useNavigate } from "react-router-dom";
+import goldIcon from "../assets/imgs/gold.png";
+import classNames from "classnames";
+import { textColor } from "../lib/grade-color/text-color";
+import { backgroundColor } from "../lib/grade-color/background-color";
+import { addComma } from "../lib/add-comma";
 
 const FindAllItems = (): JSX.Element => {
   const { data, isLoading, isError } = useGetAllItems();
@@ -17,15 +22,37 @@ const FindAllItems = (): JSX.Element => {
 
   return (
     <>
+      <div className="text-lg font-semibold grid grid-cols-3 h-[3rem] items-center border-b">
+        <p>아이템 명</p>
+        <p>최신 가격</p>
+        <p>기준 시간</p>
+      </div>
       {data!.map((item, index) => (
         <div
+          className="text-lg font-medium grid grid-cols-3 h-[4rem] items-center hover:bg-gray-100 border-b cursor-pointer"
           key={index}
           onClick={() => {
             navigate(`items/${item.id}`);
           }}
         >
-          <p>Name: {item.name}</p>
-          <p>Price: {item.price}</p>
+          <div className="flex items-center gap-4 font-semibold">
+            <img
+              src={item.icon}
+              className={classNames(
+                "h-[3rem] border border-gray-500",
+                backgroundColor(item.grade)
+              )}
+              alt="icon"
+            />
+            <p className={classNames(textColor(item.grade))}>{item.name}</p>
+          </div>
+          <div className="flex">
+            <img src={goldIcon} className="h-[2rem] pr-[0.5rem]"></img>
+            <p>{addComma(item.price)} 골드</p>
+          </div>
+          <p className="text-gray-700">
+            {new Date(item.date).toLocaleString("ko-KR")}
+          </p>
         </div>
       ))}
     </>

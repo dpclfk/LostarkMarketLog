@@ -44,7 +44,6 @@ export class ItemService {
   }
 
   async create(createItemDto: CreateItemDto) {
-    await this.s3UploadService.s3Upload(createItemDto.icon, createItemDto.name);
     if (createItemDto.itemCode) {
       // itemCode있을때, 즉 market일때
       // auctions는 아이템 코드가 없음
@@ -52,35 +51,64 @@ export class ItemService {
         throw new BadRequestException('잘못된 생성입니다.');
       }
 
-      const itemValidation: string = await this.itemsearch.itemCodeSearch(
-        createItemDto.itemCode,
+      const itemSearch: {
+        name: string;
+        icon: string;
+        itemCode?: number;
+        grade: string;
+      }[] = await this.itemsearch.itemCheck(createItemDto);
+
+      const itemValidation = itemSearch.find(
+        (item) => item.itemCode === createItemDto.itemCode,
       );
-      if (itemValidation !== createItemDto.name) {
+
+      if (!itemValidation) {
         throw new BadRequestException('아이템 이름이 다릅니다.');
+      } else if (itemValidation.icon !== createItemDto.icon) {
+        throw new BadRequestException('이미지가 다릅니다.');
       }
+
+      await this.s3UploadService.s3Upload(
+        createItemDto.icon,
+        createItemDto.name,
+      );
+
       const itemSave: Market = this.marketRepository.create({
         name: createItemDto.name,
         itemCode: createItemDto.itemCode,
         auctions: false,
         category: createItemDto.category,
+        grade: createItemDto.grade,
       });
       await this.marketRepository.save(itemSave);
     } else {
       if (createItemDto.auctions === false) {
         throw new BadRequestException('잘못된 생성입니다.');
       }
+
       const itemValidation: { name: string; icon: string }[] =
         await this.itemsearch.itemCheck(createItemDto);
+
       if (itemValidation[0].name !== createItemDto.name) {
         throw new BadRequestException('아이템 이름이 다릅니다.');
+      } else if (itemValidation[0].icon !== createItemDto.icon) {
+        throw new BadRequestException('이미지가 다릅니다.');
       }
+
+      await this.s3UploadService.s3Upload(
+        createItemDto.icon,
+        createItemDto.name,
+      );
+
       const itemSave: Market = this.marketRepository.create({
         name: createItemDto.name,
         auctions: true,
         category: createItemDto.category,
+        grade: createItemDto.grade,
       });
       await this.marketRepository.save(itemSave);
     }
+
     // 최초 시도시 mongoDB에 1번 저장함
     const nowCreate: Market = await this.marketRepository.findOne({
       where: { name: createItemDto.name },
@@ -112,6 +140,7 @@ export class ItemService {
           .lean();
         return {
           id: item.id,
+          grade: item.grade,
           name: mongoFindAll.name,
           price: mongoFindAll.price,
           comment: mongoFindAll.comment,
@@ -144,11 +173,10 @@ export class ItemService {
       };
     });
 
-    console.log(findItemPrice);
-
     return {
       name: findItem.name,
       item: findItemPrice,
+      grade: findItem.grade,
       icon: `https://${this.configService.get('AWS_S3_BUCKET')}.s3.${this.configService.get('AWS_REGION')}.amazonaws.com/${findItem.name}`,
     };
   }

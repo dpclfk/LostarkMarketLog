@@ -1,32 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
-import {
-  IsBoolean,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-  Min,
-} from 'class-validator';
-
-// export class auctionsResDto {
-//   @IsString()
-//   @IsNotEmpty()
-//   @ApiProperty()
-//   name: string;
-
-//   @IsNumber()
-//   @IsNotEmpty()
-//   @Min(10000)
-//   @ApiProperty()
-//   icon: number;
-// }
-// export class markets extends auctionsResDto {
-//   @IsNumber()
-//   @IsNotEmpty()
-//   @ApiProperty()
-//   img: string;
-// }
+import { IsOptional } from 'class-validator';
 
 export class resItemDto {
   @ApiProperty()
@@ -49,6 +22,9 @@ export class getAllItemsDto extends resItemDto {
 
   @ApiProperty()
   id: number;
+
+  @ApiProperty()
+  grade: string;
 }
 
 export class getItemDto {
@@ -60,4 +36,7 @@ export class getItemDto {
 
   @ApiProperty()
   icon: string;
+
+  @ApiProperty()
+  grade: string;
 }

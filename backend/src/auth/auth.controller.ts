@@ -123,4 +123,14 @@ export class AuthController {
     });
     return '로그아웃 완료';
   }
+
+  @ApiOperation({
+    summary: '어드민 확인',
+    description: '로그인 되어있는 사람이 어드민인지 확인합니다.',
+  })
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  @Get('/admin')
+  async adminCheck() {
+    return '어드민 입니다.';
+  }
 }
