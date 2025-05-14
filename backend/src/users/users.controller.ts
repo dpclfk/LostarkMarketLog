@@ -14,7 +14,7 @@ export class UsersController {
   })
   @ApiResponse({
     status: 200,
-    type: [resProfileDto],
+    type: resProfileDto,
   })
   @UseGuards(JwtAuthGuard)
   @Get('/profile')

@@ -1,10 +1,10 @@
 import { useMemo, type JSX } from "react";
-import { useGetAllItems } from "../lib/get-all-items";
+import { useGetAllItems } from "../../lib/item/get-all-items";
 import { useNavigate } from "react-router-dom";
-import { addComma } from "../lib/add-comma";
+import { addComma } from "../../lib/add-comma";
 import classNames from "classnames";
-import { backgroundColor } from "../lib/grade-color/background-color";
-import { textColor } from "../lib/grade-color/text-color";
+import { backgroundColor } from "../../lib/grade-color/background-color";
+import { textColor } from "../../lib/grade-color/text-color";
 
 const RightView = (): JSX.Element => {
   const { data, isLoading, isError } = useGetAllItems();

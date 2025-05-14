@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import serverbase from "./server";
+import serverbase from "../server";
 
 export interface getAllItems {
   name: string;
@@ -18,6 +18,6 @@ export const useGetAllItems = () => {
       const response = await serverbase.get(`item`);
       return response.data;
     },
-    staleTime: 10 * 60 * 1000, // 5분 동안 캐시 유지
+    staleTime: 10 * 60 * 1000, // 10분 동안 캐시 유지
   });
 };

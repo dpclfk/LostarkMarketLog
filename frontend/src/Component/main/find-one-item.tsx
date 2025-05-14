@@ -1,10 +1,10 @@
 import { type JSX } from "react";
 import { useParams } from "react-router-dom";
-import { useGetItem } from "../lib/get-item";
+import { useGetItem } from "../../lib/item/get-item";
 import classNames from "classnames";
-import { backgroundColor } from "../lib/grade-color/background-color";
-import { textColor } from "../lib/grade-color/text-color";
-import { addComma } from "../lib/add-comma";
+import { backgroundColor } from "../../lib/grade-color/background-color";
+import { textColor } from "../../lib/grade-color/text-color";
+import { addComma } from "../../lib/add-comma";
 
 const FindOneItem = (): JSX.Element => {
   const { id } = useParams();

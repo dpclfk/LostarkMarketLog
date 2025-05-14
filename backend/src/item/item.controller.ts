@@ -39,7 +39,7 @@ export class ItemController {
   })
   @ApiResponse({
     status: 200,
-    type: [getItemDto],
+    type: getItemDto,
   })
   @Get(':id')
   async findOne(@Param('id') id: string) {

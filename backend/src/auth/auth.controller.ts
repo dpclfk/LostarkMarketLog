@@ -17,7 +17,8 @@ import { AdminDto } from './dto/admin-dto';
 import { Response } from 'express';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { AdminGuard } from './admin.guard';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { resLoginDto } from './dto/res-auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -30,6 +31,10 @@ export class AuthController {
     summary: '로그인',
     description: '아이디는 이메일 형식이면가능, 비밀번호는 8자이상 60자 이하',
   })
+  @ApiResponse({
+    status: 201,
+    type: resLoginDto,
+  })
   @UseGuards(LocalAuthGuard)
   @Post('/login')
   async login(
@@ -41,13 +46,13 @@ export class AuthController {
       req.user,
     );
     res.cookie('refresh_token', refresh_token, {
-      httpOnly: false, // thunder로 테스트중일때만 false로 해놓기
-      secure: false, // thunder로 테스트중일때만 false로 해놓기
+      httpOnly: true, // thunder로 테스트중일때만 false로 해놓기
+      secure: true, // thunder로 테스트중일때만 false로 해놓기
       sameSite: 'none',
       path: '/auth',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7일
     });
-    return access_token;
+    return { access_token: access_token };
   }
 
   // 회원가입
@@ -98,7 +103,8 @@ export class AuthController {
   @Get('/refresh')
   async refresh(@Request() req) {
     const refresh_token: string = req.cookies['refresh_token']; // 쿠키에서 리프레시 토큰 가져오기
-    return await this.authService.refresh(refresh_token);
+    const access_token = await this.authService.refresh(refresh_token);
+    return { access_token: access_token };
   }
 
   // 리프레시 토큰만 삭제

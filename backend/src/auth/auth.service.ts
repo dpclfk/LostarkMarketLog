@@ -88,13 +88,13 @@ export class AuthService {
     }
 
     // 액세스 토큰 재발급
-    const new_access_token = this.jwtService.sign({
+    const access_token: string = this.jwtService.sign({
       nickname: payload.nickname,
       sub: payload.sub,
       isAdmin: payload.isAdmin,
     });
 
-    return new_access_token;
+    return access_token;
   }
   async logout(refresh_token: string) {
     const payload = await this.jwtService.verify(refresh_token, {

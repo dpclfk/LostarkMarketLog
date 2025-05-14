@@ -1,11 +1,11 @@
 import type { JSX } from "react";
-import { useGetAllItems } from "../lib/get-all-items";
+import { useGetAllItems } from "../../lib/item/get-all-items";
 import { useNavigate } from "react-router-dom";
-import goldIcon from "../assets/imgs/gold.png";
+import goldIcon from "../../assets/imgs/gold.png";
 import classNames from "classnames";
-import { textColor } from "../lib/grade-color/text-color";
-import { backgroundColor } from "../lib/grade-color/background-color";
-import { addComma } from "../lib/add-comma";
+import { textColor } from "../../lib/grade-color/text-color";
+import { backgroundColor } from "../../lib/grade-color/background-color";
+import { addComma } from "../../lib/add-comma";
 
 const FindAllItems = (): JSX.Element => {
   const { data, isLoading, isError } = useGetAllItems();
