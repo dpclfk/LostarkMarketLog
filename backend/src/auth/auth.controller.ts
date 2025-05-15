@@ -60,7 +60,14 @@ export class AuthController {
   @ApiOperation({
     summary: '회원가입',
     description:
-      '아이디는 이메일 형식이면가능, 비밀번호는 8자이상 60자 이하, 닉네임은 2자이상 20자 이하',
+      '아이디는 이메일 형식이면가능, 비밀번호는 8자이상 60자 이하, 닉네임은 2자이상 20자 이하 특수문자 불가능',
+  })
+  @ApiResponse({
+    status: 201,
+    schema: {
+      type: 'string',
+      example: '회원가입 완료',
+    },
   })
   @Post('/register')
   async register(@Body() registerDto: RegisterDto) {
@@ -122,8 +129,8 @@ export class AuthController {
     }
     await this.authService.logout(refresh_token);
     res.clearCookie('refresh_token', {
-      httpOnly: false, // thunder로 테스트중일때만 false로 해놓기
-      secure: false, // thunder로 테스트중일때만 false로 해놓기
+      httpOnly: true, // thunder로 테스트중일때만 false로 해놓기
+      secure: true, // thunder로 테스트중일때만 false로 해놓기
       sameSite: 'none',
       path: '/auth',
     });

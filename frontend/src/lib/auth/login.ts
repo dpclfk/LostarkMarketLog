@@ -25,8 +25,7 @@ const loginReq = async ({
 export const useLogin = () => {
   return useMutation({
     mutationFn: loginReq,
-    onSuccess: (data: any) => {
-      alert("로그인 성공");
+    onSuccess: (data: access_token) => {
       sessionStorage.setItem("access_token", `Bearer ${data.access_token}`);
     },
     onError: (error: any) => {

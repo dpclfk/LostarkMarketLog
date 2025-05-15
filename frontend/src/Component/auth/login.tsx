@@ -16,8 +16,9 @@ const Login = (): JSX.Element => {
     mutate(
       { email, password },
       {
-        onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ["getProfile"] });
+        onSuccess: async () => {
+          alert("로그인 성공");
+          await queryClient.refetchQueries({ queryKey: ["getProfile"] });
           navigate("/");
         },
       }
@@ -64,6 +65,9 @@ const Login = (): JSX.Element => {
         <button
           type="button"
           className="w-full bg-[#ffebc5] text-[#655e53] py-2 rounded-md hover:bg-[#e6d7b5] hover:text-[#504a43] transition cursor-pointer"
+          onClick={() => {
+            navigate("/auth/register");
+          }}
         >
           회원가입
         </button>

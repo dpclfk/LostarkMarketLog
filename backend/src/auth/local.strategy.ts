@@ -21,9 +21,12 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     const errors = await validate(dto);
 
     if (errors.length > 0) {
-      throw new BadRequestException(
-        '이메일 또는 비밀번호 형식이 잘못되었습니다',
-      );
+      console.log(errors);
+      if (errors[0].property === 'email') {
+        throw new BadRequestException(Object.values(errors[0].constraints)[0]);
+      } else if (errors[0].property === 'password') {
+        throw new BadRequestException(Object.values(errors[0].constraints)[0]);
+      }
     }
 
     const user = await this.authService.validateUser(email, password);
