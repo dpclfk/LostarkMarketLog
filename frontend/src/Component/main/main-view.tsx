@@ -6,11 +6,11 @@ import { useState } from "react";
 
 interface MainProps {
   rightView?: boolean;
-  bgWhite?: boolean;
+  bgWhiteDel?: boolean;
   setSearchItem?: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const Main = ({ rightView, bgWhite, setSearchItem }: MainProps) => {
+const MainView = ({ rightView, bgWhiteDel, setSearchItem }: MainProps) => {
   const location: Location = useLocation();
   const searchView: boolean = location.pathname === "/";
   const [search, setSearch] = useState<string>("");
@@ -31,7 +31,7 @@ const Main = ({ rightView, bgWhite, setSearchItem }: MainProps) => {
             )}
             <div
               className={classNames("min-h-screen rounded-sm pt-4 px-4", {
-                "bg-white border": bgWhite,
+                "bg-white border": !bgWhiteDel,
               })}
             >
               <Outlet />
@@ -44,4 +44,4 @@ const Main = ({ rightView, bgWhite, setSearchItem }: MainProps) => {
   );
 };
 
-export default Main;
+export default MainView;
