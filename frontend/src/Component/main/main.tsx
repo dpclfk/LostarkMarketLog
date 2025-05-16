@@ -1,18 +1,44 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, type Location } from "react-router-dom";
 import RightView from "./right-view";
+import classNames from "classnames";
+import Search from "./search";
+import { useState } from "react";
 
 interface MainProps {
   rightView?: boolean;
+  bgWhite?: boolean;
+  setSearchItem?: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const Main = ({ rightView }: MainProps) => {
+const Main = ({ rightView, bgWhite, setSearchItem }: MainProps) => {
+  const location: Location = useLocation();
+  const searchView: boolean = location.pathname === "/";
+  const [search, setSearch] = useState<string>("");
+
   return (
     <>
-      <div className="flex w-[90%] justify-between gap-[1rem] pt-6">
-        <div className="min-h-screen flex-1 border rounded-sm pt-4 px-4 bg-white">
-          <Outlet />
+      <div className="flex justify-center">
+        <div className="flex w-[90%] justify-between gap-[1rem] pt-6">
+          <div className="flex-1 space-y-4 min-w-[640px]">
+            {searchView ? (
+              <Search
+                search={search}
+                setSearch={setSearch}
+                setSearchItem={setSearchItem}
+              />
+            ) : (
+              <></>
+            )}
+            <div
+              className={classNames("min-h-screen rounded-sm pt-4 px-4", {
+                "bg-white border": bgWhite,
+              })}
+            >
+              <Outlet />
+            </div>
+          </div>
+          {rightView ? <RightView /> : <></>}
         </div>
-        {rightView ? <RightView /> : <></>}
       </div>
     </>
   );

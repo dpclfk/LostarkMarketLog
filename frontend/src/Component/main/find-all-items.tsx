@@ -1,4 +1,4 @@
-import type { JSX } from "react";
+import { useMemo, type JSX } from "react";
 import { useGetAllItems } from "../../lib/item/get-all-items";
 import { useNavigate } from "react-router-dom";
 import goldIcon from "../../assets/imgs/gold.png";
@@ -7,9 +7,21 @@ import { textColor } from "../../lib/grade-color/text-color";
 import { backgroundColor } from "../../lib/grade-color/background-color";
 import { addComma } from "../../lib/add-comma";
 
-const FindAllItems = (): JSX.Element => {
+interface IProps {
+  searchItem: string;
+}
+
+const FindAllItems = ({ searchItem }: IProps): JSX.Element => {
   const { data, isLoading, isError } = useGetAllItems();
   const navigate = useNavigate();
+
+  const search = useMemo(() => {
+    if (!data) return [];
+    if (searchItem.length > 0) {
+      const search = data.filter((item) => item.name.includes(searchItem));
+      return search;
+    } else return data;
+  }, [searchItem, data]);
 
   // 로딩 중일 때 처리
   if (isLoading) return <p>데이터를 가져오는 중입니다.</p>;
@@ -22,12 +34,12 @@ const FindAllItems = (): JSX.Element => {
 
   return (
     <>
-      <div className="text-lg font-semibold grid grid-cols-3 h-[3rem] items-center border-b">
+      <div className="text-lg font-semibold grid grid-cols-3 h-[3rem] items-center border-b ">
         <p>아이템 명</p>
         <p>최신 가격</p>
         <p>기준 시간</p>
       </div>
-      {data!.map((item, index) => (
+      {search.map((item, index) => (
         <div
           className="text-lg font-medium grid grid-cols-3 h-[4rem] items-center hover:bg-gray-100 border-b cursor-pointer"
           key={index}
@@ -44,7 +56,9 @@ const FindAllItems = (): JSX.Element => {
               )}
               alt="icon"
             />
-            <p className={classNames(textColor(item.grade))}>{item.name}</p>
+            <p className={classNames("truncate", textColor(item.grade))}>
+              {item.name}
+            </p>
           </div>
           <div className="flex">
             <img src={goldIcon} className="h-[2rem] pr-[0.5rem]"></img>

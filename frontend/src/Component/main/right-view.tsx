@@ -29,8 +29,8 @@ const RightView = (): JSX.Element => {
 
   return (
     <>
-      <div className="sticky self-start top-22 border rounded-sm py-2 bg-white">
-        <p className="text-lg font-semibold px-4">가장 비싼 아이템</p>
+      <div className="sticky self-start top-22 border rounded-sm py-2 bg-white min-w-[200px] ">
+        <p className="text-lg font-semibold px-4 truncate">가장 비싼 아이템</p>
         {expensive.map((item) => (
           <div
             key={item.id}
@@ -47,16 +47,16 @@ const RightView = (): JSX.Element => {
               )}
               alt=""
             />
-            <div>
+            <div className="flex-1 overflow-hidden">
               <p
                 className={classNames(
-                  "text-basic font-medium",
+                  "text-basic font-medium truncate",
                   textColor(item.grade)
                 )}
               >
                 {item.name}
               </p>
-              <p className={classNames("text-basic font-medium")}>
+              <p className={classNames("text-basic font-medium truncate")}>
                 {addComma(item.price)}
               </p>
             </div>

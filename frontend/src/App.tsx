@@ -5,16 +5,31 @@ import GlobalNavigationBar from "./Component/global-navigation-bar";
 import Login from "./Component/auth/login";
 import Register from "./Component/auth/register";
 import Main from "./Component/main/main";
+import { useState } from "react";
 
 function App() {
+  const [searchItem, setSearchItem] = useState<string>("");
+
   return (
     <>
       <div>
-        <GlobalNavigationBar></GlobalNavigationBar>
-        <div className="flex justify-center bg-[#ffebc5] pt-[5.5rem]">
+        <GlobalNavigationBar />
+        <div className="bg-[#ffebc5] pt-[5.5rem]">
           <Routes>
-            <Route path="/" element={<Main rightView={true} />}>
-              <Route path="/" element={<FindAllItems />} />
+            <Route
+              path="/"
+              element={
+                <Main
+                  rightView={true}
+                  bgWhite={true}
+                  setSearchItem={setSearchItem}
+                />
+              }
+            >
+              <Route
+                path="/"
+                element={<FindAllItems searchItem={searchItem} />}
+              />
               <Route path="items/:id" element={<FindOneItem />} />
             </Route>
             <Route path="/auth" element={<Main />}>

@@ -4,8 +4,8 @@ import { useLogin } from "../../lib/auth/login";
 import { useQueryClient } from "@tanstack/react-query";
 
 const Login = (): JSX.Element => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
   const { mutate } = useLogin();
   const queryClient = useQueryClient();
@@ -29,7 +29,7 @@ const Login = (): JSX.Element => {
     <div className="flex justify-center pt-8">
       <form
         onSubmit={login}
-        className="bg-white p-8 rounded shadow-md w-[400px] space-y-4"
+        className="bg-white p-8 rounded shadow-md w-[600px] space-y-4"
       >
         <p className="text-3xl font-bold text-center pb-2 text-[#655e53]">
           로아 마켓로그 로그인
