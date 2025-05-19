@@ -14,7 +14,12 @@ import { UpdateItemDto } from './dto/update-item.dto';
 import { ApiCreatedResponse, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AdminGuard } from 'src/auth/admin.guard';
-import { getAllItemsDto, getItemDto } from './dto/res-item.dto';
+import {
+  CategoryCode,
+  getAllItemsDto,
+  getItemDto,
+  ItemCheck,
+} from './dto/res-item.dto';
 
 @Controller('item')
 export class ItemController {
@@ -31,6 +36,20 @@ export class ItemController {
   @Get()
   async findAll() {
     return await this.itemService.findAll();
+  }
+
+  @ApiOperation({
+    summary: '카테고리를 가져옵니다.',
+    description: '카테고리 목록을 가져옵니다. 아이템 추가할때 필요합니다.',
+  })
+  @ApiResponse({
+    status: 200,
+    type: CategoryCode,
+  })
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  @Get('category')
+  async category() {
+    return await this.itemService.category();
   }
 
   @ApiOperation({
@@ -62,12 +81,14 @@ export class ItemController {
   })
   @ApiCreatedResponse({
     description: '아이템이 실제로 있는 경우 입니다.',
+    type: [ItemCheck],
   })
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Post('check')
   async check(@Body() itemCheckDto: ItemCheckDto) {
     return await this.itemService.check(itemCheckDto);
   }
+
   @ApiOperation({
     summary: 'MySQL 수정하기',
     description: 'MySQL에서 잘못된값을 수정합니다.',

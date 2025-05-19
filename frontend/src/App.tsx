@@ -2,6 +2,11 @@ import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense, useState } from "react";
 import Loading from "./Component/loading";
 import GlobalNavigationBar from "./Component/global-navigation-bar";
+import Admin from "./Component/admin/admin";
+import AddAdmin from "./Component/admin/add-Admin";
+import AddItem from "./Component/admin/add-item";
+import RemoveAdmin from "./Component/admin/remove-admin";
+import RemoveItem from "./Component/admin/remove-item";
 
 const FindAllItems = lazy(() => import("./Component/main/find-all-items"));
 const FindOneItem = lazy(() => import("./Component/main/find-one-item"));
@@ -9,6 +14,7 @@ const Login = lazy(() => import("./Component/auth/login"));
 const Register = lazy(() => import("./Component/auth/register"));
 const MainView = lazy(() => import("./Component/main/main-view"));
 const NotFound = lazy(() => import("./Component/not-found"));
+const AdminView = lazy(() => import("./Component/admin/admin-view"));
 
 function App() {
   const [searchItem, setSearchItem] = useState<string>("");
@@ -36,7 +42,13 @@ function App() {
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
               </Route>
-              <Route path="/admin" element={<MainView />}></Route>
+              <Route path="/admin" element={<AdminView />}>
+                <Route path="" element={<Admin />} />
+                <Route path="add-admin" element={<AddAdmin />} />
+                <Route path="add-item" element={<AddItem />} />
+                <Route path="remove-admin" element={<RemoveAdmin />} />
+                <Route path="remove-item" element={<RemoveItem />} />
+              </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

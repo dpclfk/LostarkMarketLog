@@ -4,7 +4,6 @@ import { UpdateItemDto } from './dto/update-item.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Item, ItemDocument } from 'src/schema/item.schema';
-import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { ItemSearchService } from 'src/item-search/item-search.service';
 import { S3UploadService } from 'src/s3-upload/s3-upload.service';
@@ -12,7 +11,7 @@ import { Repository } from 'typeorm';
 import { Market } from 'src/entities/Market.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DateTime } from 'luxon';
-import { getAllItemsDto, resItemDto } from './dto/res-item.dto';
+import { getAllItemsDto, ItemCheck, resItemDto } from './dto/res-item.dto';
 
 export interface ItemSearchParams {
   name: string;
@@ -32,10 +31,8 @@ export class ItemService {
   ) {}
 
   async check(itemCheckDto: ItemCheckDto) {
-    const itemcheck: {
-      name: string;
-      icon: string;
-    }[] = await this.itemsearch.itemCheck(itemCheckDto);
+    const itemcheck: ItemCheck[] =
+      await this.itemsearch.itemCheck(itemCheckDto);
     if (itemcheck.length < 1) {
       throw new BadRequestException('존재하지 않는 아이템입니다.');
     } else {
@@ -217,5 +214,9 @@ export class ItemService {
 
     await this.marketRepository.delete({ id: id });
     return `${findItem.name} 아이템을 삭제하였습니다.`;
+  }
+
+  async category() {
+    return await this.itemsearch.category();
   }
 }

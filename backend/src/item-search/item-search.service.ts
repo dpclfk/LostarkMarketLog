@@ -148,11 +148,25 @@ export class ItemSearchService {
         return { name: market.name, price: null };
       } else {
         //  그 당일날의 평균값을 가져옴
+        let price = searchAPI.data[0].Stats[0].AvgPrice;
+        if (price === 0) {
+          price = searchAPI.data[1].Stats[0].AvgPrice;
+        }
+
         return {
           name: market.name,
-          price: searchAPI.data[0].Stats[0].AvgPrice,
+          price: price,
         };
       }
     }
+  }
+  async category() {
+    const markets = await this.lostlink.get('markets/options');
+    const auctions = await this.lostlink.get('auctions/options');
+
+    return {
+      market_category: markets.data.Categories,
+      auction_category: auctions.data.Categories,
+    };
   }
 }
