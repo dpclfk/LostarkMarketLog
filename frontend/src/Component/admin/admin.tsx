@@ -43,7 +43,7 @@ const Admin = () => {
             navigate("/admin/add-admin");
           }}
         >
-          어드민 권한 추가
+          어드민 권한 부여
         </button>
       </div>
       <div className="grid auto-rows-auto">

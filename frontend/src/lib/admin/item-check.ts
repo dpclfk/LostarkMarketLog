@@ -40,8 +40,10 @@ export const useItemCheck = () => {
     mutationFn: itemCheck,
     onSuccess: () => {},
     onError: (error: any) => {
-      if (error.response?.data?.message === "Unauthorized") {
-        alert("권한이 없습니다.");
+      if (
+        error.response?.data?.message === "category must not be less than 10000"
+      ) {
+        alert("카테고리를 입력해주세요.");
       } else {
         // 커스텀 에러메시지 경로
         const errorMessage =

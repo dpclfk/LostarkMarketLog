@@ -22,5 +22,7 @@ export const useGetItem = (id: number) => {
       return response.data;
     },
     staleTime: 10 * 60 * 1000, // 10분 동안 캐시 유지
+    refetchOnWindowFocus: false, // 탭 전환 시 재요청 방지
+    refetchOnMount: false, // 컴포넌트 마운트 시 재요청 방지
   });
 };

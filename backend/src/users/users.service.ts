@@ -60,4 +60,18 @@ export class UsersService {
   async logout(id: number) {
     await this.usersRepository.update(id, { refresh: null });
   }
+
+  async notAdminList() {
+    return await this.usersRepository.find({
+      where: { admin: false },
+      select: ['id', 'nickname'],
+    });
+  }
+
+  async adminList() {
+    return await this.usersRepository.find({
+      where: { admin: true },
+      select: ['id', 'nickname'],
+    });
+  }
 }

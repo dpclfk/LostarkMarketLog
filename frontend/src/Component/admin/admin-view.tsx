@@ -1,24 +1,20 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import classNames from "classnames";
 import { useAdmin } from "../../lib/admin/admin";
 import { useEffect, useState } from "react";
 
 const AdminView = () => {
-  const navigate = useNavigate();
-  const [Success, setSuccess] = useState<Boolean>(true);
+  const [Success, setSuccess] = useState<Boolean>(false);
 
   const { mutate: adminCheck } = useAdmin();
 
-  // useEffect(() => {
-  //   adminCheck(undefined, {
-  //     onSuccess: () => {
-  //       setSuccess(true);
-  //     },
-  //     onError: async () => {
-  //       navigate("/");
-  //     },
-  //   });
-  // }, []);
+  useEffect(() => {
+    adminCheck(undefined, {
+      onSuccess: () => {
+        setSuccess(true);
+      },
+    });
+  }, []);
 
   return (
     <>

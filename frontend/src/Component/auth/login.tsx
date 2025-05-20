@@ -19,7 +19,7 @@ const Login = (): JSX.Element => {
         onSuccess: async () => {
           alert("로그인 성공");
           await queryClient.refetchQueries({ queryKey: ["getProfile"] });
-          navigate("/");
+          navigate("/", { replace: true });
         },
       }
     );

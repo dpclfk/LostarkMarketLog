@@ -14,8 +14,6 @@ export const useAdmin = () => {
   return useMutation({
     mutationFn: admin,
     onSuccess: () => {},
-    onError: () => {
-      alert("권한이 없습니다.");
-    },
+    onError: () => {},
   });
 };

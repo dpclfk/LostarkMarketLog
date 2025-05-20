@@ -18,11 +18,7 @@ const GlobalNavigationBar = (): JSX.Element => {
           >
             로아 마켓로그
           </Link>
-          {data && !isError ? (
-            <IsLoggedIn data={data} />
-          ) : (
-            <IsLoggedOut isError={isError} />
-          )}
+          {data && !isError ? <IsLoggedIn data={data} /> : <IsLoggedOut />}
         </div>
       </div>
     </>

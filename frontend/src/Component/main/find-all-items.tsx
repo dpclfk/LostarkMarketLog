@@ -39,10 +39,10 @@ const FindAllItems = ({ searchItem }: IProps): JSX.Element => {
         <p>최신 가격</p>
         <p>기준 시간</p>
       </div>
-      {search.map((item, index) => (
+      {search.map((item) => (
         <div
           className="text-lg font-medium grid grid-cols-3 h-[4rem] items-center hover:bg-gray-100 border-b cursor-pointer"
-          key={index}
+          key={item.id}
           onClick={() => {
             navigate(`items/${item.id}`);
           }}

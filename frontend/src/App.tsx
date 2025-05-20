@@ -2,12 +2,12 @@ import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense, useState } from "react";
 import Loading from "./Component/loading";
 import GlobalNavigationBar from "./Component/global-navigation-bar";
-import Admin from "./Component/admin/admin";
-import AddAdmin from "./Component/admin/add-Admin";
-import AddItem from "./Component/admin/add-item";
-import RemoveAdmin from "./Component/admin/remove-admin";
-import RemoveItem from "./Component/admin/remove-item";
 
+const Admin = lazy(() => import("./Component/admin/admin"));
+const AddAdmin = lazy(() => import("./Component/admin/add-Admin"));
+const AddItem = lazy(() => import("./Component/admin/add-item"));
+const RemoveAdmin = lazy(() => import("./Component/admin/remove-admin"));
+const RemoveItem = lazy(() => import("./Component/admin/remove-item"));
 const FindAllItems = lazy(() => import("./Component/main/find-all-items"));
 const FindOneItem = lazy(() => import("./Component/main/find-one-item"));
 const Login = lazy(() => import("./Component/auth/login"));
