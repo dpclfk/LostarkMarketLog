@@ -8,7 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { ItemSearchService } from 'src/item-search/item-search.service';
 import { S3UploadService } from 'src/s3-upload/s3-upload.service';
 import { Repository } from 'typeorm';
-import { Market } from 'src/entities/Market.entity';
+import { Market } from 'src/entities/market.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DateTime } from 'luxon';
 import { getAllItemsDto, ItemCheck, resItemDto } from './dto/res-item.dto';

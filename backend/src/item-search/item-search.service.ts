@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosInstance } from 'axios';
-import { Market } from 'src/entities/Market.entity';
+import { Market } from 'src/entities/market.entity';
 import { ItemCheckDto } from 'src/item/dto/create-item.dto';
 import { AuctionsItemDto, MarketsDto } from 'src/item/dto/open-api.dto';
 

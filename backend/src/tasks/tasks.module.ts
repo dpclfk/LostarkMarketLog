@@ -4,7 +4,7 @@ import { ItemSearchService } from 'src/item-search/item-search.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Item, ItemSchema } from 'src/schema/item.schema';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Market } from 'src/entities/Market.entity';
+import { Market } from 'src/entities/market.entity';
 
 @Module({
   imports: [

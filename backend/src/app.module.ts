@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { typeormConfig } from './config/typeORM.config';
 import { Users } from './entities/users.entity';
-import { Market } from './entities/Market.entity';
+import { Market } from './entities/market.entity';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MongoConfig } from './config/mongo.config';
 import { Item, ItemSchema } from './schema/item.schema';

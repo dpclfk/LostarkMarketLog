@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Cron } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Model } from 'mongoose';
-import { Market } from 'src/entities/Market.entity';
+import { Market } from 'src/entities/market.entity';
 import { ItemSearchService } from 'src/item-search/item-search.service';
 import { Item, ItemDocument } from 'src/schema/item.schema';
 import { In, Repository } from 'typeorm';
