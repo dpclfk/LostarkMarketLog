@@ -11,15 +11,18 @@ import { Item, ItemSchema } from './schema/item.schema';
 import { TasksModule } from './tasks/tasks.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AuthModule } from './auth/auth.module';
-import { UsersService } from './users/users.service';
 import { UsersModule } from './users/users.module';
+import { AppService } from './app.services';
 
 @Module({
   imports: [
     ItemModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `${__dirname}/../.env`,
+      envFilePath: [
+        `${__dirname}/../.env.${process.env.NODE_ENV}`,
+        `${__dirname}/../.env`,
+      ],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -39,6 +42,6 @@ import { UsersModule } from './users/users.module';
     UsersModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [AppService],
 })
 export class AppModule {}

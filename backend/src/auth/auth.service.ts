@@ -103,4 +103,10 @@ export class AuthService {
 
     await this.usersService.logout(payload.sub);
   }
+
+  async addFirstAdmin(registerDto: RegisterDto) {
+    registerDto.password = await this.hassPassword(registerDto.password);
+    await this.usersService.addFirstAdmin(registerDto);
+    // return '회원가입 완료';
+  }
 }

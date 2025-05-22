@@ -18,6 +18,7 @@ export class UsersService {
       select: ['id', 'password', 'admin', 'nickname'],
     });
   }
+
   async register(registerDto: RegisterDto) {
     const userRegister: Users = this.usersRepository.create({
       email: registerDto.email,
@@ -73,5 +74,16 @@ export class UsersService {
       where: { admin: true },
       select: ['id', 'nickname'],
     });
+  }
+
+  async addFirstAdmin(registerDto: RegisterDto) {
+    const userRegister: Users = this.usersRepository.create({
+      id: 1,
+      email: registerDto.email,
+      password: registerDto.password,
+      nickname: registerDto.nickname,
+      admin: true,
+    });
+    await this.usersRepository.upsert(userRegister, ['id']);
   }
 }

@@ -10,10 +10,16 @@ import { MysqlErrFilter } from './filter/mysql-err/mysql-err.filter';
 import { TypeErrFilter } from './filter/type-err/type-err.filter';
 import cookieParser from 'cookie-parser';
 import { JwtErrFilter } from './filter/jwt-err/jwt-err.filter';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   // mongoose.set('debug', true); // mongoose 로그
+
+  const configService = app.get(ConfigService);
+
+  const port = configService.get<number>('PORT');
+
   // dto에서 타입이 잘못되면 안되게 막음
   app.useGlobalPipes(
     new ValidationPipe({
@@ -37,20 +43,23 @@ async function bootstrap() {
 
   // 리프레시토큰을 쿠키에 저장하기위해 사용
   app.use(cookieParser(process.env.COOKIE_SECRET));
+
+  app.setGlobalPrefix('api');
+
   // swagger 관련
   const options = new DocumentBuilder()
-    .setTitle('lostark calc API')
-    .setDescription('로스트아크 계산기 API 명세서입니다.')
+    .setTitle('lostark market Log API')
+    .setDescription('로스트아크 마켓 로그 API 명세서입니다.')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('apiDocs', app, document);
 
   app.enableCors({
-    origin: 'http://localhost:3001',
+    origin: 'http://localhost:3701',
     credentials: true,
   });
 
-  await app.listen(3000);
+  await app.listen(port);
 }
 bootstrap();
