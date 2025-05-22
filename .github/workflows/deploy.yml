@@ -61,7 +61,7 @@ jobs:
       - name: test mysql user
         run: |
           ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
-          "mysql -h ${{secrets.MYSQL_HOST}} -P ${{secrets.MYSQL_PORT}} -u ${{ secrets.MYSQL_USER }} -p ${{ secrets.MYSQL_PASSWORD }}"
+          mysql -h ${{secrets.MYSQL_HOST}} -P ${{secrets.MYSQL_PORT}} -u ${{ secrets.MYSQL_USER }} -p${{ secrets.MYSQL_PASSWORD }} -e "SHOW DATABASES;"'
 
   test_mongo:
     runs-on: ubuntu-latest
@@ -165,7 +165,7 @@ jobs:
         run: ${{ secrets.SERVER_ENV }}
 
       - name: Build Back
-        working-directory: ./back
+        working-directory: ./backend
         run: npm run build
 
       - name: Copy Files to EC2
