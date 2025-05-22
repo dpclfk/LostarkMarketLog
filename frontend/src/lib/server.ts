@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const serverbase = axios.create({
-  baseURL: "http://localhost:3700/api/",
+  baseURL: "/api/",
   withCredentials: true,
 });
 
