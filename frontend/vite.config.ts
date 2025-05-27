@@ -9,5 +9,12 @@ export default defineConfig({
     port: 3701,
     open: true,
     strictPort: true,
+    proxy: {
+      "/api": {
+        target: "http://localhost:3700",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
 });

@@ -15,7 +15,7 @@ const RightView = (): JSX.Element => {
     const sort = [...data].sort((a, b) => {
       return b.price - a.price;
     });
-    return sort;
+    return sort.slice(0, 5);
   }, [data]);
 
   // 로딩 중일 때 처리
@@ -29,8 +29,10 @@ const RightView = (): JSX.Element => {
 
   return (
     <>
-      <div className="sticky self-start top-22 border rounded-sm py-2 bg-white min-w-[200px] ">
-        <p className="text-lg font-semibold px-4 truncate">가장 비싼 아이템</p>
+      <div className="sticky self-start top-22 border rounded-sm py-2 bg-white min-w-[220px] ">
+        <p className="text-lg font-semibold px-4 truncate">
+          비싼 아이템(TOP 5)
+        </p>
         {expensive.map((item) => (
           <div
             key={item.id}

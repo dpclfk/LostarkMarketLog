@@ -20,7 +20,7 @@ import { AppService } from './app.services';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: [
-        `${__dirname}/.env.${process.env.NODE_ENV}`,
+        `${__dirname}/../.env.${process.env.NODE_ENV}`,
         `${__dirname}/../.env`,
       ],
     }),

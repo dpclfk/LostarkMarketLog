@@ -49,7 +49,7 @@ export class AuthController {
       httpOnly: true, // thunder로 테스트중일때만 false로 해놓기
       secure: true, // thunder로 테스트중일때만 false로 해놓기
       sameSite: 'none',
-      path: '/auth',
+      path: '/api/auth',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7일
     });
     return { access_token: access_token };
@@ -132,7 +132,7 @@ export class AuthController {
       httpOnly: true, // thunder로 테스트중일때만 false로 해놓기
       secure: true, // thunder로 테스트중일때만 false로 해놓기
       sameSite: 'none',
-      path: '/auth',
+      path: '/api/auth',
     });
     return '로그아웃 완료';
   }
