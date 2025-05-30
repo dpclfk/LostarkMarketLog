@@ -10,8 +10,18 @@ const Login = (): JSX.Element => {
   const navigate = useNavigate();
   const { mutate } = useLogin();
   const queryClient = useQueryClient();
-  const client_id = "AywVcA4g3oIywUAUE4Tm";
-  const redirectURI = "http://localhost:3701/auth/navercallback";
+
+  const client_id = useMemo(() => {
+    window.location.hostname === "localhost"
+      ? "AywVcA4g3oIywUAUE4Tm"
+      : "8DdxiA6lVEm8WmhGnnRx";
+  }, []);
+
+  const redirectURI = useMemo(() => {
+    window.location.hostname === "localhost"
+      ? "http://localhost:3701/auth/navercallback"
+      : "https://lostarkmarketlog.dpclfk.com/auth/navercallback";
+  }, []);
 
   const state: string = useMemo(
     () => encodeURIComponent(Math.random().toString(36).substring(2)),
