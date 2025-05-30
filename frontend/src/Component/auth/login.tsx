@@ -11,16 +11,14 @@ const Login = (): JSX.Element => {
   const { mutate } = useLogin();
   const queryClient = useQueryClient();
 
-  const client_id = useMemo(() => {
-    window.location.hostname === "localhost"
-      ? "AywVcA4g3oIywUAUE4Tm"
-      : "8DdxiA6lVEm8WmhGnnRx";
-  }, []);
-
-  const redirectURI = useMemo(() => {
-    window.location.hostname === "localhost"
-      ? "http://localhost:3701/auth/navercallback"
-      : "https://lostarkmarketlog.dpclfk.com/auth/navercallback";
+  const { client_id, redirectURI } = useMemo(() => {
+    const isDev = window.location.hostname === "localhost";
+    return {
+      client_id: isDev ? "AywVcA4g3oIywUAUE4Tm" : "8DdxiA6lVEm8WmhGnnRx",
+      redirectURI: isDev
+        ? "http://localhost:3701/auth/navercallback"
+        : "https://lostarkmarketlog.dpclfk.com/auth/navercallback",
+    };
   }, []);
 
   const state: string = useMemo(
