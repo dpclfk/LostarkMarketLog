@@ -47,7 +47,6 @@ const AddItem = () => {
     if (ref.current) {
       const currentWidth = ref.current.offsetWidth; // div의 실제 너비
       setIsSmallWidth(currentWidth <= 860);
-      console.log(isSmallWidth);
     }
   }, []);
 

@@ -5,6 +5,7 @@ import {
   Get,
   Patch,
   Post,
+  Query,
   Request,
   Res,
   UnauthorizedException,
@@ -145,5 +146,30 @@ export class AuthController {
   @Get('/admin')
   async adminCheck() {
     return '어드민 입니다.';
+  }
+
+  @ApiOperation({
+    summary: '네이버 로그인 유저 체크',
+    description: '이미 회원가입 되어있는 사람은 Duplicate, 아니면 이메일 출력',
+  })
+  @Get('/naver-oauth')
+  async naverOAuth(
+    @Query() query: { code: string; state: string },
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const naverUserInfo = await this.authService.naverOAuth(
+      query.code,
+      query.state,
+    );
+    const { access_token, refresh_token } =
+      await this.authService.login(naverUserInfo);
+    res.cookie('refresh_token', refresh_token, {
+      httpOnly: true, // thunder로 테스트중일때만 false로 해놓기
+      secure: true, // thunder로 테스트중일때만 false로 해놓기
+      sameSite: 'none',
+      path: '/api/auth',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7일
+    });
+    return { access_token: access_token };
   }
 }

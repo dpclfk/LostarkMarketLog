@@ -15,6 +15,7 @@ const Register = lazy(() => import("./Component/auth/register"));
 const MainView = lazy(() => import("./Component/main/main-view"));
 const NotFound = lazy(() => import("./Component/not-found"));
 const AdminView = lazy(() => import("./Component/admin/admin-view"));
+const NaverCallback = lazy(() => import("./Component/auth/naver-callback"));
 
 function App() {
   const [searchItem, setSearchItem] = useState<string>("");
@@ -23,8 +24,8 @@ function App() {
     <>
       <div>
         <GlobalNavigationBar />
-        <Suspense fallback={<Loading />}>
-          <div className="bg-[#ffebc5] pt-[5.5rem]">
+        <div className="bg-[#ffebc5] pt-[5.5rem]">
+          <Suspense fallback={<Loading />}>
             <Routes>
               <Route
                 path="/"
@@ -41,6 +42,7 @@ function App() {
               <Route path="/auth" element={<MainView bgWhiteDel={true} />}>
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
+                <Route path="navercallback" element={<NaverCallback />} />
               </Route>
               <Route path="/admin" element={<AdminView />}>
                 <Route path="" element={<Admin />} />
@@ -51,8 +53,8 @@ function App() {
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </div>
-        </Suspense>
+          </Suspense>
+        </div>
       </div>
     </>
   );

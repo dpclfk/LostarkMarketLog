@@ -6,6 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { RegisterDto } from './dto/register-dto';
 import { AdminDto } from './dto/admin-dto';
 import { Users } from 'src/entities/users.entity';
+import { OAuthService } from './OAuth.service';
 
 @Injectable()
 export class AuthService {
@@ -13,6 +14,7 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private oAuthService: OAuthService,
   ) {}
 
   private async hassPassword(password: string): Promise<string> {
@@ -108,5 +110,10 @@ export class AuthService {
     registerDto.password = await this.hassPassword(registerDto.password);
     await this.usersService.addFirstAdmin(registerDto);
     // return '회원가입 완료';
+  }
+  async naverOAuth(code: string, state: string) {
+    const naverEmail = await this.oAuthService.naver(code, state);
+    const naverRegister = await this.usersService.naverRegister(naverEmail);
+    return naverRegister;
   }
 }

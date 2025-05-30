@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { nanoid } from 'nanoid';
 import { AdminDto } from 'src/auth/dto/admin-dto';
 import { RegisterDto } from 'src/auth/dto/register-dto';
 import { Users } from 'src/entities/users.entity';
@@ -85,5 +86,29 @@ export class UsersService {
       admin: true,
     });
     await this.usersRepository.upsert(userRegister, ['id']);
+  }
+
+  async naverRegister(email: string) {
+    const userInfo = await this.usersRepository.findOne({
+      where: { email: email },
+      select: ['id', 'admin', 'nickname'],
+    });
+
+    if (userInfo) {
+      return userInfo;
+    } else {
+      const nickname = nanoid(10);
+      const userRegister: Users = this.usersRepository.create({
+        email: email,
+        password: 'naver',
+        nickname: `naver-${nickname}`,
+      });
+      const saved = await this.usersRepository.save(userRegister);
+      const userInfo = await this.usersRepository.findOne({
+        where: { id: saved.id },
+        select: ['id', 'admin', 'nickname'],
+      });
+      return userInfo;
+    }
   }
 }
