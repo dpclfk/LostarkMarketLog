@@ -51,6 +51,17 @@ async function bootstrap() {
     .setTitle('lostark market Log API')
     .setDescription('로스트아크 마켓 로그 API 명세서입니다.')
     .setVersion('1.0')
+    .addCookieAuth('refresh_token')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'Authorization',
+        in: 'header',
+      },
+      'access-token',
+    )
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('apiDocs', app, document);

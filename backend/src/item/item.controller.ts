@@ -11,7 +11,12 @@ import {
 import { ItemService } from './item.service';
 import { CreateItemDto, ItemCheckDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
-import { ApiCreatedResponse, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AdminGuard } from 'src/auth/admin.guard';
 import {
@@ -46,6 +51,7 @@ export class ItemController {
     status: 200,
     type: CategoryCode,
   })
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Get('category')
   async category() {
@@ -69,6 +75,7 @@ export class ItemController {
     summary: 'DB에 저장',
     description: 'POST /check에서 응답된 내용을 기반으로 저장합니다.',
   })
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Post()
   async create(@Body() createItemDto: CreateItemDto) {
@@ -83,6 +90,7 @@ export class ItemController {
     description: '아이템이 실제로 있는 경우 입니다.',
     type: [ItemCheck],
   })
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Post('check')
   async check(@Body() itemCheckDto: ItemCheckDto) {
@@ -93,6 +101,7 @@ export class ItemController {
     summary: 'MySQL 수정하기',
     description: 'MySQL에서 잘못된값을 수정합니다.',
   })
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateItemDto: UpdateItemDto) {
@@ -104,6 +113,7 @@ export class ItemController {
     description:
       'MySQL에서 완전삭제합니다. 더이상 최신가격 업데이트 및 값이 나오는것을 원하지 않을경우 삭제해주세요. MongoDB값은 삭제하지 않습니다.',
   })
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {

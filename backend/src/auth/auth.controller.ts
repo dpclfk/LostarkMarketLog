@@ -18,7 +18,12 @@ import { AdminDto } from './dto/admin-dto';
 import { Response } from 'express';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { AdminGuard } from './admin.guard';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCookieAuth,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { resLoginDto } from './dto/res-auth.dto';
 
 @Controller('auth')
@@ -30,7 +35,8 @@ export class AuthController {
   // passthrough는 return값을 무시하는걸 막아줌
   @ApiOperation({
     summary: '로그인',
-    description: '아이디는 이메일 형식이면가능, 비밀번호는 8자이상 60자 이하',
+    description:
+      '아이디는 이메일 형식이면가능, 비밀번호는 8자이상 60자 이하, 성공시 로그인처리되어 자동으로 쿠키에 리프레시토큰이 저장됩니다.',
   })
   @ApiResponse({
     status: 201,
@@ -81,6 +87,14 @@ export class AuthController {
     summary: '어드민 권한 부여',
     description: '닉네임은 2자이상 20자 이하',
   })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      type: 'string',
+      example: '어드민 권한 부여 완료',
+    },
+  })
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Patch('/admin')
   async adminAuth(@Body() adminDto: AdminDto) {
@@ -94,6 +108,14 @@ export class AuthController {
     summary: '어드민 권한 제거',
     description: '닉네임은 2자이상 20자 이하',
   })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      type: 'string',
+      example: '어드민 권한 제거 완료',
+    },
+  })
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Patch('/admin-remove')
   async adminRemove(@Body() adminDto: AdminDto) {
@@ -108,6 +130,11 @@ export class AuthController {
     description:
       '엑세스토큰 만료시 재발급, 쿠키값 사용하니 with credentials 설정 필요',
   })
+  @ApiResponse({
+    status: 200,
+    type: resLoginDto,
+  })
+  @ApiCookieAuth()
   @Get('/refresh')
   async refresh(@Request() req) {
     const refresh_token: string = req.cookies['refresh_token']; // 쿠키에서 리프레시 토큰 가져오기
@@ -121,6 +148,13 @@ export class AuthController {
     summary: '로그아웃',
     description:
       '쿠키에 저장되어있는 리프레시토큰 삭제, 쿠키값 사용하니 with credentials 설정 필요',
+  })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      type: 'string',
+      example: '로그아웃 완료',
+    },
   })
   @Delete('/logout')
   async logout(@Request() req, @Res({ passthrough: true }) res: Response) {
@@ -142,6 +176,14 @@ export class AuthController {
     summary: '어드민 확인',
     description: '로그인 되어있는 사람이 어드민인지 확인합니다.',
   })
+  @ApiResponse({
+    status: 200,
+    schema: {
+      type: 'string',
+      example: '어드민 입니다.',
+    },
+  })
+  @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard, AdminGuard)
   @Get('/admin')
   async adminCheck() {
@@ -150,7 +192,12 @@ export class AuthController {
 
   @ApiOperation({
     summary: '네이버 로그인 유저 체크',
-    description: '이미 회원가입 되어있는 사람은 Duplicate, 아니면 이메일 출력',
+    description:
+      '이미 회원가입 되어있는 사람은 Duplicate, 아니면 이메일 출력, 성공시 로그인처리되어 자동으로 쿠키에 리프레시토큰이 저장됩니다.',
+  })
+  @ApiResponse({
+    status: 201,
+    type: resLoginDto,
   })
   @Get('/naver-oauth')
   async naverOAuth(
