@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useLogin } from "../../lib/auth/login";
 import { useQueryClient } from "@tanstack/react-query";
 import naverBtn from "../../assets/login-btn/naver-btn.png";
+import googleBtn from "../../assets/login-btn/google-btn.svg";
 
 const Login = (): JSX.Element => {
   const [email, setEmail] = useState<string>("");
@@ -11,15 +12,22 @@ const Login = (): JSX.Element => {
   const { mutate } = useLogin();
   const queryClient = useQueryClient();
 
-  const { client_id, redirectURI } = useMemo(() => {
-    const isDev = window.location.hostname === "localhost";
-    return {
-      client_id: isDev ? "AywVcA4g3oIywUAUE4Tm" : "8DdxiA6lVEm8WmhGnnRx",
-      redirectURI: isDev
-        ? "http://localhost:3701/auth/navercallback"
-        : "https://lostarkmarketlog.dpclfk.com/auth/navercallback",
-    };
-  }, []);
+  const { naverClientId, naverRedirectURI, googleClientId, googleRedirectURI } =
+    useMemo(() => {
+      const isDev = window.location.hostname === "localhost";
+      return {
+        naverClientId: isDev ? "AywVcA4g3oIywUAUE4Tm" : "8DdxiA6lVEm8WmhGnnRx",
+        naverRedirectURI: isDev
+          ? "http://localhost:3701/auth/navercallback"
+          : "https://lostarkmarketlog.dpclfk.com/auth/navercallback",
+        googleClientId: isDev
+          ? "193806327836-o5gaj56n28riona39qksth30dab6c2jk.apps.googleusercontent.com"
+          : "193806327836-lbuuarnj8n7htu3d9g50hgn2a715o590.apps.googleusercontent.com",
+        googleRedirectURI: isDev
+          ? "http://localhost:3701/auth/googlecallback"
+          : "https://lostarkmarketlog.dpclfk.com/auth/googlecallback",
+      };
+    }, []);
 
   const state: string = useMemo(
     () => encodeURIComponent(Math.random().toString(36).substring(2)),
@@ -43,11 +51,21 @@ const Login = (): JSX.Element => {
   const naverClick = () => {
     window.location.replace(
       "https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=" +
-        client_id +
+        naverClientId +
         "&redirect_uri=" +
-        redirectURI +
+        naverRedirectURI +
         "&state=" +
         state
+    );
+  };
+
+  const googleClick = () => {
+    window.location.replace(
+      "https://accounts.google.com/o/oauth2/v2/auth?client_id=" +
+        googleClientId +
+        "&redirect_uri=" +
+        googleRedirectURI +
+        "&response_type=code&scope=openid%20profile%20email"
     );
   };
 
@@ -98,6 +116,9 @@ const Login = (): JSX.Element => {
         <div className="flex gap-[8px]">
           <button onClick={naverClick} className="cursor-pointer">
             <img src={naverBtn} className="h-[40px]" alt="naver-login-btn" />
+          </button>
+          <button onClick={googleClick} className="cursor-pointer">
+            <img src={googleBtn} className="h-[40px]" alt="naver-login-btn" />
           </button>
         </div>
       </div>

@@ -16,6 +16,7 @@ const MainView = lazy(() => import("./Component/main/main-view"));
 const NotFound = lazy(() => import("./Component/not-found"));
 const AdminView = lazy(() => import("./Component/admin/admin-view"));
 const NaverCallback = lazy(() => import("./Component/auth/naver-callback"));
+const GoogleCallback = lazy(() => import("./Component/auth/google-callback"));
 
 function App() {
   const [searchItem, setSearchItem] = useState<string>("");
@@ -43,6 +44,7 @@ function App() {
                 <Route path="login" element={<Login />} />
                 <Route path="register" element={<Register />} />
                 <Route path="navercallback" element={<NaverCallback />} />
+                <Route path="googlecallback" element={<GoogleCallback />} />
               </Route>
               <Route path="/admin" element={<AdminView />}>
                 <Route path="" element={<Admin />} />

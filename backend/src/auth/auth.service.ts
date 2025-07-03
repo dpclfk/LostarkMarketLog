@@ -116,4 +116,10 @@ export class AuthService {
     const naverRegister = await this.usersService.naverRegister(naverEmail);
     return naverRegister;
   }
+
+  async googleOAuth(code: string) {
+    const googleEmail = await this.oAuthService.google(code);
+    const googleRegister = await this.usersService.googleRegister(googleEmail);
+    return googleRegister;
+  }
 }

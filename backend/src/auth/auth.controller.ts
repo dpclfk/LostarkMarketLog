@@ -219,4 +219,31 @@ export class AuthController {
     });
     return { access_token: access_token };
   }
+
+  @ApiOperation({
+    summary: '구글 로그인 유저 체크',
+    description:
+      '이미 회원가입 되어있는 사람은 Duplicate, 아니면 이메일 출력, 성공시 로그인처리되어 자동으로 쿠키에 리프레시토큰이 저장됩니다.',
+  })
+  @ApiResponse({
+    status: 201,
+    type: resLoginDto,
+  })
+  @Get('/google-oauth')
+  async googleOAuth(
+    @Query() query: { code: string },
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const googleUserInfo = await this.authService.googleOAuth(query.code);
+    const { access_token, refresh_token } =
+      await this.authService.login(googleUserInfo);
+    res.cookie('refresh_token', refresh_token, {
+      httpOnly: true, // thunder로 테스트중일때만 false로 해놓기
+      secure: true, // thunder로 테스트중일때만 false로 해놓기
+      sameSite: 'none',
+      path: '/api/auth',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7일
+    });
+    return { access_token: access_token };
+  }
 }

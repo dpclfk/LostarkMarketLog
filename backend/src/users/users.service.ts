@@ -89,6 +89,9 @@ export class UsersService {
   }
 
   async naverRegister(email: string) {
+    if (!email) {
+      throw new BadRequestException('다시 로그인 해주세요');
+    }
     const userInfo = await this.usersRepository.findOne({
       where: { email: email },
       select: ['id', 'admin', 'nickname'],
@@ -102,6 +105,33 @@ export class UsersService {
         email: email,
         password: 'naver',
         nickname: `naver-${nickname}`,
+      });
+      const saved = await this.usersRepository.save(userRegister);
+      const userInfo = await this.usersRepository.findOne({
+        where: { id: saved.id },
+        select: ['id', 'admin', 'nickname'],
+      });
+      return userInfo;
+    }
+  }
+
+  async googleRegister(email: string) {
+    if (!email) {
+      throw new BadRequestException('다시 로그인 해주세요');
+    }
+    const userInfo = await this.usersRepository.findOne({
+      where: { email: email },
+      select: ['id', 'admin', 'nickname'],
+    });
+
+    if (userInfo) {
+      return userInfo;
+    } else {
+      const nickname = nanoid(10);
+      const userRegister: Users = this.usersRepository.create({
+        email: email,
+        password: 'google',
+        nickname: `google-${nickname}`,
       });
       const saved = await this.usersRepository.save(userRegister);
       const userInfo = await this.usersRepository.findOne({
