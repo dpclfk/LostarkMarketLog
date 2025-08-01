@@ -2,7 +2,7 @@ import { Outlet, useLocation, type Location } from "react-router-dom";
 import RightView from "./right-view";
 import classNames from "classnames";
 import Search from "./search";
-import { useState } from "react";
+import { useState, type JSX } from "react";
 
 interface MainProps {
   rightView?: boolean;
@@ -10,7 +10,11 @@ interface MainProps {
   setSearchItem?: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const MainView = ({ rightView, bgWhiteDel, setSearchItem }: MainProps) => {
+const MainView = ({
+  rightView,
+  bgWhiteDel,
+  setSearchItem,
+}: MainProps): JSX.Element => {
   const location: Location = useLocation();
   const searchView: boolean = location.pathname === "/";
   const [search, setSearch] = useState<string>("");
