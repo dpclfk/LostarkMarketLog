@@ -16,7 +16,6 @@ const Pagination = ({
   currentPage,
   endPage,
 }: IProps): JSX.Element => {
-  console.log(totalPages, startPage);
   return (
     <div className="flex justify-center">
       <div className="w-[50%]">
@@ -41,14 +40,14 @@ const Pagination = ({
                 {
                   "bg-gray-300 hover:bg-gray-400":
                     startPage + i === currentPage,
-                }
+                },
               )}
               onClick={() => pageMove(startPage + i)}
             >
               <p>{startPage + i}</p>
             </div>
           ))}
-          {endPage === currentPage || endPage < 11 ? (
+          {endPage === totalPages || endPage < 10 ? (
             <div className="max-w-[10%] flex-1 h-full flex items-center justify-center text-white select-none">
               &gt; &gt;
             </div>

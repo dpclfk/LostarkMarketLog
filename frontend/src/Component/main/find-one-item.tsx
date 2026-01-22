@@ -15,17 +15,21 @@ const FindOneItem = (): JSX.Element => {
 
   const currentPage: number = Math.max(
     parseInt(searchParams.get("page") || "1", 10),
-    1
+    1,
   ); // 뒤에 10은 진법임
 
-  const { data, isLoading, isError } = useGetItem(+id!);
+  const numId: number = Math.max(parseInt(id || "1", 10), 1);
 
+  const { data, isLoading, isError } = useGetItem(numId, currentPage);
+
+  // 총 몇페이지 나올지
   const totalPages: number = useMemo(() => {
     if (data) {
-      return Math.ceil(data.item.length / 10);
+      return Math.ceil(data.totalCount / 10);
     } else return 0;
   }, [data]);
 
+  // 보여지는 시작페이지가 몇페이지일지
   const startPage: number = useMemo(() => {
     let startPage = currentPage - 4 < 1 ? 1 : currentPage - 4;
     if (currentPage + 5 > totalPages) {
@@ -34,6 +38,7 @@ const FindOneItem = (): JSX.Element => {
     return startPage;
   }, [currentPage, totalPages]);
 
+  // 보여지는 끝 페이지가 몇페이지일지
   const endPage: number = useMemo(() => {
     let endPage = currentPage + 5;
     if (currentPage + 5 < 10 && totalPages > 10) {
@@ -86,7 +91,7 @@ const FindOneItem = (): JSX.Element => {
           alt="icon"
           className={classNames(
             "h-[3rem] border border-gray-500",
-            backgroundColor(data.grade)
+            backgroundColor(data.grade),
           )}
         />
         <p
@@ -111,16 +116,16 @@ const FindOneItem = (): JSX.Element => {
           const priceChange = item.price - prePrice;
 
           return (
-            index >= (currentPage - 1) * 10 &&
-            index < currentPage * 10 && (
+            index >= 0 &&
+            index < 1 * 10 && (
               <div
-                key={`one${index}`}
+                key={`${currentPage}-${index}`}
                 className={classNames(
                   "flex justify-center gap-2 text-lg py-1 h-[2.5rem] items-center grid grid-cols-3",
                   {
                     "bg-gray-200": index % 2 === 0, // 짝수일 때
                     "bg-gray-100": index % 2 !== 0, // 홀수일 때
-                  }
+                  },
                 )}
               >
                 <p>{new Date(item.date).toLocaleString("ko-KR")}</p>

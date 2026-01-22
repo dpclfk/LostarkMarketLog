@@ -13,6 +13,9 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { AppService } from './app.services';
+import { AccessoryOption } from './entities/accessory-option.entity';
+import { MarketAccessory } from './entities/market-accessory.entity';
+import { OptionValue } from './entities/option-value';
 
 @Module({
   imports: [
@@ -29,7 +32,13 @@ import { AppService } from './app.services';
       inject: [ConfigService],
       useFactory: typeormConfig,
     }),
-    TypeOrmModule.forFeature([Users, Market]),
+    TypeOrmModule.forFeature([
+      Users,
+      Market,
+      AccessoryOption,
+      MarketAccessory,
+      OptionValue,
+    ]),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

@@ -1,3 +1,5 @@
+// api 요청했을때 응답되는 내용 타입들을 정의합니다.
+
 export class OptionDto {
   Type: string;
   OptionName: string;
@@ -41,4 +43,26 @@ export class MarketsDto {
   YDayAvgPrice: number;
   RecentPrice: number;
   CurrentMinPrice: number;
+}
+
+export class EtcValueDto {
+  DisplayValue: string;
+  Value: number;
+  IsPercentage: boolean;
+}
+
+export class EtcSubDto {
+  Value: number;
+  Text: string;
+  Class: string;
+  Categorys: number[] | null;
+  Tiers: number[] | null;
+  EtcValues: EtcValueDto[];
+}
+
+export class accessoryOptionsDto {
+  Value: number;
+  Text: string;
+  Tiers: number[];
+  EtcSubs: EtcSubDto[];
 }

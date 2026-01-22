@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsBoolean,
   IsNotEmpty,
@@ -9,6 +9,8 @@ import {
   IsUrl,
   Matches,
   Min,
+  ValidateIf,
+  ValidateNested,
 } from 'class-validator';
 
 export class ItemCheckDto {
@@ -53,4 +55,45 @@ export class CreateItemDto extends ItemCheckDto {
   @IsNotEmpty()
   @ApiProperty()
   grade: string;
+}
+
+export class AccessoryValueDto {
+  @IsNumber()
+  @IsNotEmpty()
+  SecondOption: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  value: number;
+}
+
+export class AccessoryDto extends CreateItemDto {
+  // 품질 70이래는 가치가 없어서 필요없음
+  @IsNumber()
+  @IsNotEmpty()
+  @Min(70)
+  quality: number;
+
+  @ValidateNested()
+  @Type(() => AccessoryValueDto)
+  @IsNotEmpty()
+  accessoryUpgrade1: AccessoryValueDto;
+
+  // accessoryUpgrade1 있을 때만 가능
+  @ValidateIf((o) => o.accessoryUpgrade1 !== undefined)
+  @ValidateNested()
+  @Type(() => AccessoryValueDto)
+  accessoryUpgrade2?: AccessoryValueDto | null;
+
+  // accessoryUpgrade2 있을 때만 가능
+  @ValidateIf((o) => o.accessoryUpgrade2 !== undefined)
+  @ValidateNested()
+  @Type(() => AccessoryValueDto)
+  accessoryUpgrade3?: AccessoryValueDto | null;
+
+  // 3티어는 가치없어서 필요없음
+  @IsNumber()
+  @IsNotEmpty()
+  @Min(4)
+  itemTier: number;
 }

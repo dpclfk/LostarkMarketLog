@@ -149,7 +149,7 @@ export class ItemService {
     return findAllLastPrice;
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, page: number) {
     // 문자 들어왔을때 에러 내보내게
     if (Number.isNaN(id)) {
       throw new BadRequestException('숫자만 넣어주세요');
@@ -158,9 +158,18 @@ export class ItemService {
       where: { id: id },
     });
 
+    const totalCount: number = await this.itemModel.countDocuments({
+      name: findItem.name,
+    });
+
+    const pageSize: number = 10; // 지금은 안쓰는데 확장하게 되면 쓰려고 미리 만듬
+    const skipItem: number = (page - 1) * pageSize;
+
     const mongoFindAll: Item[] = await this.itemModel
       .find({ name: findItem.name })
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip(skipItem)
+      .limit(pageSize + 1);
 
     const findItemPrice: resItemDto[] = mongoFindAll.map((item) => {
       return {
@@ -175,6 +184,7 @@ export class ItemService {
       item: findItemPrice,
       grade: findItem.grade,
       icon: `https://${this.configService.get('AWS_S3_BUCKET')}.s3.${this.configService.get('AWS_REGION')}.amazonaws.com/${findItem.name}`,
+      totalCount: totalCount,
     };
   }
 
@@ -218,5 +228,16 @@ export class ItemService {
 
   async category() {
     return await this.itemsearch.category();
+  }
+
+  async accessoryCategory() {
+    return await this.itemsearch.accessoryCategory();
+  }
+
+  async accessoryOptions(id: number) {
+    if (Number.isNaN(id)) {
+      throw new BadRequestException('숫자만 넣어주세요');
+    }
+    return await this.itemsearch.accessoryOptions(id);
   }
 }

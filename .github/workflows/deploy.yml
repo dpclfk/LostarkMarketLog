@@ -119,6 +119,10 @@ jobs:
         working-directory: ./frontend
         run: npm i
 
+      - name: Audit Fix
+        working-directory: ./frontend
+        run: npm audit fix
+
       - name: Build Front
         working-directory: ./frontend
         run: npm run build

@@ -1,9 +1,16 @@
+// 여기에서만 로아 api관련 사용할것
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosInstance } from 'axios';
 import { Market } from 'src/entities/market.entity';
-import { ItemCheckDto } from 'src/item/dto/create-item.dto';
-import { AuctionsItemDto, MarketsDto } from 'src/item/dto/open-api.dto';
+import { AccessoryDto, ItemCheckDto } from 'src/item/dto/create-item.dto';
+import {
+  accessoryOptionsDto,
+  AuctionsItemDto,
+  EtcSubDto,
+  MarketsDto,
+} from 'src/item/dto/open-api.dto';
+import { CategoryItem } from 'src/item/dto/res-item.dto';
 
 @Injectable()
 export class ItemSearchService {
@@ -168,5 +175,78 @@ export class ItemSearchService {
       market_category: markets.data.Categories,
       auction_category: auctions.data.Categories,
     };
+  }
+
+  async marketAccessory(accessory: AccessoryDto) {
+    const marketAccessory = await this.lostlink.post('auctions/items', {
+      ItemGradeQuality: accessory.quality,
+      EtcOptions: [
+        {
+          FirstOption: 7,
+          SecondOption: accessory.accessoryUpgrade1.SecondOption,
+          MinValue: accessory.accessoryUpgrade1.value,
+          MaxValue: accessory.accessoryUpgrade1.value,
+        },
+        {
+          FirstOption: 7,
+          SecondOption: accessory.accessoryUpgrade2.SecondOption || null,
+          MinValue: accessory.accessoryUpgrade2.value || null,
+          MaxValue: accessory.accessoryUpgrade2.value || null,
+        },
+        {
+          FirstOption: 7,
+          SecondOption: accessory.accessoryUpgrade3.SecondOption || null,
+          MinValue: accessory.accessoryUpgrade3.value || null,
+          MaxValue: accessory.accessoryUpgrade3.value || null,
+        },
+      ],
+      Sort: 'BUY_PRICE',
+      CategoryCode: accessory.category,
+      ItemTier: accessory.itemTier,
+      ItemGrade: accessory.grade,
+      PageNo: 1,
+      SortCondition: 'asc',
+    });
+
+    console.log(marketAccessory);
+  }
+
+  async accessoryCategory() {
+    const auctionsOptions = await this.lostlink.get('auctions/options');
+
+    return {
+      categories: await auctionsOptions.data.Categories.find(
+        (item: CategoryItem) => item.Code === 200000,
+      ).Subs,
+      qualities: await auctionsOptions.data.ItemGradeQualities,
+      grades: await auctionsOptions.data.ItemGrades,
+    };
+  }
+
+  async accessoryOptions(id: number) {
+    const auctionsOptions = await this.lostlink.get('auctions/options');
+    const accessoryOptions: EtcSubDto[] =
+      await auctionsOptions.data.EtcOptions.find(
+        (item: accessoryOptionsDto) => item.Value === 7,
+      ).EtcSubs;
+
+    const categories = await auctionsOptions.data.Categories.find(
+      (item: CategoryItem) => item.Code === 200000,
+    ).Subs;
+
+    // 유효한 카테고리 코드인지 확인
+    const hasCode = (value: number): boolean => {
+      return categories.some((item: CategoryItem) => item.Code === value);
+    };
+
+    if (hasCode(id)) {
+      return {
+        accessoryOptions: accessoryOptions.filter(
+          (item) => item.Categorys === null || item.Categorys.includes(id),
+        ),
+      };
+    } else {
+      throw new BadRequestException('아이템 코드를 확인해 주세요.');
+    }
   }
 }

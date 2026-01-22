@@ -7,6 +7,9 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
+  ParseIntPipe,
+  DefaultValuePipe,
 } from '@nestjs/common';
 import { ItemService } from './item.service';
 import { CreateItemDto, ItemCheckDto } from './dto/create-item.dto';
@@ -25,6 +28,7 @@ import {
   getItemDto,
   ItemCheck,
 } from './dto/res-item.dto';
+import { EtcSubDto } from './dto/open-api.dto';
 
 @Controller('item')
 export class ItemController {
@@ -58,6 +62,28 @@ export class ItemController {
     return await this.itemService.category();
   }
 
+  // @ApiOperation({
+  //   summary: '카테고리를 가져옵니다.',
+  //   description: '카테고리 목록을 가져옵니다. 아이템 추가할때 필요합니다.',
+  // })
+  // @ApiResponse({
+  //   status: 200,
+  //   type: CategoryCode,
+  // })
+  // @ApiBearerAuth('access-token')
+  // @UseGuards(JwtAuthGuard, AdminGuard)
+  @Get('accessory-category')
+  async accessoryCategory() {
+    return await this.itemService.accessoryCategory();
+  }
+
+  @Get('accessory-options/:id')
+  async accessoryOptions(@Param('id', ParseIntPipe) id: string): Promise<{
+    accessoryOptions: EtcSubDto[];
+  }> {
+    return await this.itemService.accessoryOptions(+id);
+  }
+
   @ApiOperation({
     summary: '특정아이템의 기록된 모든 가격들',
     description: 'DB에 저장되어있는 특정아이템의 기록된 모든가격입니다.',
@@ -67,8 +93,11 @@ export class ItemController {
     type: getItemDto,
   })
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return await this.itemService.findOne(+id);
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+  ) {
+    return await this.itemService.findOne(id, page);
   }
 
   @ApiOperation({
