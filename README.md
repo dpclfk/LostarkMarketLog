@@ -1,2 +1,45 @@
-# LostarkMarketLog
-https://www.notion.so/Lostark-Market-Log-1de59c7e40ad80509501c9d6d5adfdf3?pvs=4
+# lostark market log
+
+## 로스트아크 마켓 로그
+
+- Lostark Open API를 활용하여 아이템들의 가격변동 추이를 확인하는 사이트 개발
+
+## 프로젝트 인원
+
+- 1명
+
+## 프로젝트 목적
+
+- 인프라 설계: AWS S3/RDS 연동을 통한 서버 부하 분산 및 데이터 관리 효율화
+
+- 핵심 기능 구현: NestJS의 생명주기(Guard, Filter 등)를 활용한 체계적인 예외 처리 및 백그라운드 태스크 관리
+
+- 인증 로직 고도화: JWT 기반 인증 시스템 구축을 통해 프론트엔드와 백엔드 간의 안전한 데이터 교환 흐름 이해
+
+## 주요 구현 및 담당 업무
+
+### 보안 및 인증 시스템 설계
+
+- JWT(JSON Web Token) 도입: Stateless한 인증 구조를 설계하여 서버 확장성을 확보하고, 토큰 기반 인증으로 클라이언트-서버 간 보안 통신을 구현했습니다.
+
+- NestJS Guard 활용: 인가(Authorization) 로직을 미들웨어 계층에서 처리하여, 비정상적인 접근으로부터 리소스를 보호하고 코드의 재사용성을 높였습니다.
+
+### 시스템 자동화 및 안정화
+
+- Task Scheduling 기반 자동화: NestJS의 Cron 기능을 활용해 주기적인 데이터 수집 및 배치 프로세스를 자동화하여 운영 효율을 개선했습니다.
+
+- Exception Filter를 통한 예외 공통화: 전역 예외 처리기(Global Exception Filter)를 구현하여 에러 응답 규격을 통일하고, 런타임 에러에도 서비스 연속성이 유지되는 안정적인 시스템을 구축했습니다.
+
+### 개발 생산성 및 인프라 최적화
+
+- Swagger(OpenAPI) 문서화: API 명세와 데이터 타입을 자동화하여 프론트엔드와의 협업 효율을 높이고, 타입 불일치로 인한 런타임 오류를 사전에 방지했습니다.
+
+- AWS 클라우드 자원 최적화: RDS(데이터베이스)와 S3(스토리지)를 활용하여 정적 파일과 데이터를 서버 본체와 분리했습니다. 이를 통해 서버 부하를 분산시키고 독립적인 스케일링이 가능한 구조를 구현했습니다.
+
+## 해당 프로젝트 노션 페이지 링크
+
+- https://www.notion.so/Lostark-Market-Log-1de59c7e40ad80509501c9d6d5adfdf3?pvs=4
+
+## 실제 구현한 사이트
+
+- https://lostarkmarketlog.dpclfk.com/
