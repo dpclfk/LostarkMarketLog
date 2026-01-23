@@ -36,6 +36,28 @@
 
 - AWS 클라우드 자원 최적화: RDS(데이터베이스)와 S3(스토리지)를 활용하여 정적 파일과 데이터를 서버 본체와 분리했습니다. 이를 통해 서버 부하를 분산시키고 독립적인 스케일링이 가능한 구조를 구현했습니다.
 
+## 기술 역량
+
+### Backend Development
+
+- NestJS & TypeScript: 모듈형 아키텍처를 이해하고, 타입 안정성을 확보한 견고한 서버 로직 구현
+
+- TypeORM: Data Mapper 패턴을 활용한 효율적인 DB 스키마 설계 및 데이터 관리
+
+- JWT Authentication: 토큰 기반 인증/인가 시스템 구축 및 보안 흐름 이해
+
+### Frontend Development
+
+- React: 컴포넌트 기반 개발을 통한 재사용성 극대화 및 사용자 경험(UX) 중심 UI 구현
+
+- TailwindCSS: 유틸리티 우선(Utility-first) 방식의 스타일링으로 신속한 UI 프로토타이핑 및 일관된 디자인 시스템 적용
+
+### Infrastructure & DevOps
+
+- AWS (S3, RDS): 클라우드 스토리지와 관리형 데이터베이스를 활용한 서버 무상태성(Stateless) 및 데이터 영속성 확보
+
+- Swagger: API 명세 자동화 및 프론트엔드-백엔드 간 원활한 협업 프로세스 구축
+
 ## 해당 프로젝트 노션 페이지 링크
 
 - https://www.notion.so/Lostark-Market-Log-1de59c7e40ad80509501c9d6d5adfdf3?pvs=4
