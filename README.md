@@ -68,7 +68,3 @@
 ## 해당 프로젝트 노션 페이지 링크
 
 - https://www.notion.so/Lostark-Market-Log-1de59c7e40ad80509501c9d6d5adfdf3?pvs=4
-
-## 실제 구현한 사이트
-
-- https://lostarkmarketlog.dpclfk.com/
