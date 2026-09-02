@@ -22,11 +22,8 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
     if (errors.length > 0) {
       console.log(errors);
-      if (errors[0].property === 'email') {
-        throw new BadRequestException(Object.values(errors[0].constraints)[0]);
-      } else if (errors[0].property === 'password') {
-        throw new BadRequestException(Object.values(errors[0].constraints)[0]);
-      }
+      // 첫번째 에러메세지를 보여줌
+      throw new BadRequestException(Object.values(errors[0].constraints)[0]);
     }
 
     const user = await this.authService.validateUser(email, password);

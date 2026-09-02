@@ -53,7 +53,7 @@ export class OAuthService {
     googleBody.append('code', code);
     googleBody.append(
       'redirect_uri',
-      'https://lostarkmarketlog.dpclfk.com/auth/googlecallback',
+      'https://loa-market-log.akdfid.kr/auth/googlecallback',
     );
 
     const getAccessToken = await axios.post(`${googleUrl.href}`, googleBody, {

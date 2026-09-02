@@ -13,6 +13,11 @@ serverbase.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    // 로그인 요청 자체의 401(이메일/비밀번호 틀림)은 재발급 대상이 아니므로 그대로 반환
+    if (originalRequest.url?.includes("/auth/login")) {
+      return Promise.reject(error);
+    }
+
     // Unauthorized 에러이고, 이미 재시도한 요청이 아닌 경우 (무한 루프 방지)
     if (error.response?.status === 401 && !originalRequest.retry) {
       originalRequest.retry = true; // 재시도 플래그 설정

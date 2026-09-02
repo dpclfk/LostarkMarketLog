@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense, useState } from "react";
 import Loading from "./Component/loading";
 import GlobalNavigationBar from "./Component/global-navigation-bar";
+import Footer from "./Component/footer";
 
 const Admin = lazy(() => import("./Component/admin/admin"));
 const AddAdmin = lazy(() => import("./Component/admin/add-Admin"));
@@ -57,6 +58,7 @@ function App() {
             </Routes>
           </Suspense>
         </div>
+        <Footer />
       </div>
     </>
   );

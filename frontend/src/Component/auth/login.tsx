@@ -19,13 +19,13 @@ const Login = (): JSX.Element => {
         naverClientId: isDev ? "AywVcA4g3oIywUAUE4Tm" : "8DdxiA6lVEm8WmhGnnRx",
         naverRedirectURI: isDev
           ? "http://localhost:3701/auth/navercallback"
-          : "https://lostarkmarketlog.dpclfk.com/auth/navercallback",
+          : "https://loa-market-log.akdfid.kr/auth/navercallback",
         googleClientId: isDev
           ? "193806327836-o5gaj56n28riona39qksth30dab6c2jk.apps.googleusercontent.com"
           : "193806327836-lbuuarnj8n7htu3d9g50hgn2a715o590.apps.googleusercontent.com",
         googleRedirectURI: isDev
           ? "http://localhost:3701/auth/googlecallback"
-          : "https://lostarkmarketlog.dpclfk.com/auth/googlecallback",
+          : "https://loa-market-log.akdfid.kr/auth/googlecallback",
       };
     }, []);
 
