@@ -4,9 +4,8 @@ import { UpdateItemDto } from './dto/update-item.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Item, ItemDocument } from 'src/schema/item.schema';
-import { ConfigService } from '@nestjs/config';
 import { ItemSearchService } from 'src/item-search/item-search.service';
-import { S3UploadService } from 'src/s3-upload/s3-upload.service';
+import { FileUploadService } from 'src/file-upload/file-upload.service';
 import { Repository } from 'typeorm';
 import { Market } from 'src/entities/market.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -25,9 +24,8 @@ export class ItemService {
     @InjectModel(Item.name) private itemModel: Model<ItemDocument>,
     @InjectRepository(Market)
     private marketRepository: Repository<Market>,
-    private configService: ConfigService,
     private itemsearch: ItemSearchService,
-    private s3UploadService: S3UploadService,
+    private fileUploadService: FileUploadService,
   ) {}
 
   async check(itemCheckDto: ItemCheckDto) {
@@ -65,7 +63,7 @@ export class ItemService {
         throw new BadRequestException('이미지가 다릅니다.');
       }
 
-      await this.s3UploadService.s3Upload(
+      await this.fileUploadService.uploadFromUrl(
         createItemDto.icon,
         createItemDto.name,
       );
@@ -92,7 +90,7 @@ export class ItemService {
         throw new BadRequestException('이미지가 다릅니다.');
       }
 
-      await this.s3UploadService.s3Upload(
+      await this.fileUploadService.uploadFromUrl(
         createItemDto.icon,
         createItemDto.name,
       );
@@ -141,7 +139,7 @@ export class ItemService {
           name: mongoFindAll.name,
           price: mongoFindAll.price,
           comment: mongoFindAll.comment,
-          icon: `https://${this.configService.get('AWS_S3_BUCKET')}.s3.${this.configService.get('AWS_REGION')}.amazonaws.com/${mongoFindAll.name}`,
+          icon: `/uploads/${mongoFindAll.name}`,
           date: mongoFindAll.createdAt,
         };
       }),
@@ -183,7 +181,7 @@ export class ItemService {
       name: findItem.name,
       item: findItemPrice,
       grade: findItem.grade,
-      icon: `https://${this.configService.get('AWS_S3_BUCKET')}.s3.${this.configService.get('AWS_REGION')}.amazonaws.com/${findItem.name}`,
+      icon: `/uploads/${findItem.name}`,
       totalCount: totalCount,
     };
   }
@@ -207,7 +205,10 @@ export class ItemService {
     }
     // 이미지에 변화있으면 새로운 이미지로 변경
     if (updateItemDto.icon) {
-      await this.s3UploadService.s3Upload(updateItemDto.icon, findItem.name);
+      await this.fileUploadService.uploadFromUrl(
+        updateItemDto.icon,
+        findItem.name,
+      );
     }
 
     return '변경이 완료되었습니다.';

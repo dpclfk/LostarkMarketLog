@@ -5,7 +5,6 @@ import { MongoErrFilter } from './filter/mongo-err/mongo-err.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { AxiosErrFilter } from './filter/axios-err/axios-err.filter';
-import { AwsErrFilter } from './filter/aws-err/aws-err.filter';
 import { MysqlErrFilter } from './filter/mysql-err/mysql-err.filter';
 import { TypeErrFilter } from './filter/type-err/type-err.filter';
 import cookieParser from 'cookie-parser';
@@ -33,7 +32,6 @@ async function bootstrap() {
   // 에러 필터 관련
   app.useGlobalFilters(
     new HttpExceptionFilter(),
-    new AwsErrFilter(),
     new MongoErrFilter(),
     new AxiosErrFilter(),
     new MysqlErrFilter(),

@@ -3,14 +3,23 @@
 ## Tech Stack
 
 <div align="left">
+
   <img src="https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white"/>
+
   <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white"/>
+
   <img src="https://img.shields.io/badge/TypeORM-E84343?style=for-the-badge&logo=typeorm&logoColor=white"/>
+
   <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white"/>
+
   <img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white"/>
+
   <img src="https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white"/>
+
   <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black"/>
+
   <img src="https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white"/>
+
 </div>
 
 ## 로스트아크 마켓 로그
@@ -31,9 +40,7 @@
 ## 프로젝트 목적
 
 - 인프라 설계: AWS S3/RDS 연동을 통한 서버 부하 분산 및 데이터 관리 효율화
-
 - 핵심 기능 구현: NestJS의 생명주기(Guard, Filter 등)를 활용한 체계적인 예외 처리 및 백그라운드 태스크 관리
-
 - 인증 로직 고도화: JWT 기반 인증 시스템 구축을 통해 프론트엔드와 백엔드 간의 안전한 데이터 교환 흐름 이해
 
 ## 주요 구현 및 담당 업무
@@ -41,43 +48,37 @@
 ### 보안 및 인증 시스템 설계
 
 - JWT(JSON Web Token) 도입: Stateless한 인증 구조를 설계하여 서버 확장성을 확보하고, 토큰 기반 인증으로 클라이언트-서버 간 보안 통신을 구현했습니다.
-
 - NestJS Guard 활용: 인가(Authorization) 로직을 미들웨어 계층에서 처리하여, 비정상적인 접근으로부터 리소스를 보호하고 코드의 재사용성을 높였습니다.
 
 ### 시스템 자동화 및 안정화
 
 - Task Scheduling 기반 자동화: NestJS의 Cron 기능을 활용해 주기적인 데이터 수집 및 배치 프로세스를 자동화하여 운영 효율을 개선했습니다.
-
 - Exception Filter를 통한 예외 공통화: 전역 예외 처리기(Global Exception Filter)를 구현하여 에러 응답 규격을 통일하고, 런타임 에러에도 서비스 연속성이 유지되는 안정적인 시스템을 구축했습니다.
 
 ### 개발 생산성 및 인프라 최적화
 
 - Swagger(OpenAPI) 문서화: API 명세와 데이터 타입을 자동화하여 프론트엔드와의 협업 효율을 높이고, 타입 불일치로 인한 런타임 오류를 사전에 방지했습니다.
-
 - AWS 클라우드 자원 최적화: RDS(데이터베이스)와 S3(스토리지)를 활용하여 정적 파일과 데이터를 서버 본체와 분리했습니다. 이를 통해 서버 부하를 분산시키고 독립적인 스케일링이 가능한 구조를 구현했습니다.
 
 ## 기술 역량
 
 ### Backend Development
 
-- NestJS & TypeScript: 모듈형 아키텍처를 이해하고, 타입 안정성을 확보한 견고한 서버 로직 구현
-
+- NestJS &amp; TypeScript: 모듈형 아키텍처를 이해하고, 타입 안정성을 확보한 견고한 서버 로직 구현
 - TypeORM: Data Mapper 패턴을 활용한 효율적인 DB 스키마 설계 및 데이터 관리
-
 - JWT Authentication: 토큰 기반 인증/인가 시스템 구축 및 보안 흐름 이해
 
 ### Frontend Development
 
 - React: 컴포넌트 기반 개발을 통한 재사용성 극대화 및 사용자 경험(UX) 중심 UI 구현
-
 - TailwindCSS: 유틸리티 우선(Utility-first) 방식의 스타일링으로 신속한 UI 프로토타이핑 및 일관된 디자인 시스템 적용
 
-### Infrastructure & DevOps
+### Infrastructure &amp; DevOps
 
 - AWS (S3, RDS): 클라우드 스토리지와 관리형 데이터베이스를 활용한 서버 무상태성(Stateless) 및 데이터 영속성 확보
-
 - Swagger: API 명세 자동화 및 프론트엔드-백엔드 간 원활한 협업 프로세스 구축
 
 ## 해당 프로젝트 노션 페이지 링크
 
-- https://www.notion.so/Lostark-Market-Log-1de59c7e40ad80509501c9d6d5adfdf3?pvs=4
+- [https://www.notion.so/Lostark-Market-Log-1de59c7e40ad80509501c9d6d5adfdf3?pvs=4](https://www.notion.so/Lostark-Market-Log-1de59c7e40ad80509501c9d6d5adfdf3?pvs=4)
+
