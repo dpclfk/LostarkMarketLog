@@ -1,12 +1,12 @@
 # lostark market log
 
-## 배포 링크
+## 배포 주소
 
-- [https://loa-market-log.akdfid.kr](https://loa-market-log.akdfid.kr)
-  - 첫 페이지 링크
-- [https://loa-market-log.akdfid.kr/apidocs](https://loa-market-log.akdfid.kr/apidocs)
-  - api명세서 링크
-
+- 메인페이지 주소
+  - [https://loa-market-log.akdfid.kr](https://loa-market-log.akdfid.kr)
+- api 명세서 주소
+  - [https://loa-market-log.akdfid.kr/apidocs](https://loa-market-log.akdfid.kr/apidocs)
+  
 ## Tech Stack
 
 <div align="left">
